@@ -5,8 +5,6 @@ services:
      build: 
        context: .
        dockerfile: Dockerfile
-     volumes:
-        - application-data:/app
      expose:
         - 80
      restart: unless-stopped
@@ -16,9 +14,6 @@ services:
         LETSENCRYPT_EMAIL: xershade.ca@gmail.com
         ASPNETCORE_HTTP_PORTS: 80
      container_name: xershade.ca.website
-
-volumes:
-  application-data:
 
 networks:
   default:
