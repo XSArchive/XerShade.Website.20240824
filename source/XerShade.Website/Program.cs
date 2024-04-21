@@ -1,38 +1,53 @@
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+
 namespace XerShade.Website;
 
 public class Program
 {
     public static void Main(string[] args)
     {
-        var builder = WebApplication.CreateBuilder(args);
+        WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddControllersWithViews();
-        builder.Services.Configure<ForwardedHeadersOptions>(options => {
-            options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+        _ = builder.Services.AddControllersWithViews();
+        _ = builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
+
+        _ = builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        _ = builder.Services.AddScoped<IUrlHelper>(x =>
+        {
+            ActionContext? actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+            IUrlHelperFactory factory = x.GetRequiredService<IUrlHelperFactory>();
+            return factory.GetUrlHelper(context: actionContext ?? throw new NullReferenceException());
         });
 
-        var app = builder.Build();
+        WebApplication app = builder.Build();
 
         if (!app.Environment.IsDevelopment())
         {
-            app.UseExceptionHandler("/Home/Error");
-            app.UseForwardedHeaders();
-            app.UseHsts();
+            _ = app.UseExceptionHandler("/Home/Error");
+            _ = app.UseForwardedHeaders();
+            _ = app.UseHsts();
         }
         else
         {
-            app.UseDeveloperExceptionPage();
-            app.UseForwardedHeaders();
-        } 
+            _ = app.UseDeveloperExceptionPage();
+            _ = app.UseForwardedHeaders();
+        }
 
-        app.UseHttpsRedirection();
-        app.UseStaticFiles();
+        _ = app.UseHttpsRedirection();
+        _ = app.UseStaticFiles();
 
-        app.UseRouting();
+        _ = app.UseRouting();
 
-        app.UseAuthorization();
+        _ = app.UseAuthentication();
+        _ = app.UseAuthorization();
 
-        app.MapControllerRoute(
+        _ = app.MapControllerRoute(
+            name: "areas",
+            pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+        _ = app.MapControllerRoute(
             name: "default",
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
