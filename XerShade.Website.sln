@@ -5,13 +5,17 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "source", "source", "{C44870B2-C85E-4F52-AB18-C8DF875855D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XerShade.Website", "source\XerShade.Website\XerShade.Website.csproj", "{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XerShade.Website", "source\XerShade.Website\XerShade.Website.csproj", "{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D7BF4083-8759-4972-8467-359077C1098A}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yml = docker-compose.yml
 		Dockerfile = Dockerfile
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "modules", "modules", "{60A9C10E-46D1-40C4-AE19-FCE7C26D0BB9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XerShade.Website.Core", "source\modules\XerShade.Website.Core\XerShade.Website.Core.csproj", "{F3813AF8-6412-481D-99E7-AB1FC9B22F15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,12 +27,18 @@ Global
 		{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3813AF8-6412-481D-99E7-AB1FC9B22F15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3813AF8-6412-481D-99E7-AB1FC9B22F15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3813AF8-6412-481D-99E7-AB1FC9B22F15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3813AF8-6412-481D-99E7-AB1FC9B22F15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{37EB2C51-DCAE-4E5F-9C8D-5C73744E356C} = {C44870B2-C85E-4F52-AB18-C8DF875855D4}
+		{60A9C10E-46D1-40C4-AE19-FCE7C26D0BB9} = {C44870B2-C85E-4F52-AB18-C8DF875855D4}
+		{F3813AF8-6412-481D-99E7-AB1FC9B22F15} = {60A9C10E-46D1-40C4-AE19-FCE7C26D0BB9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ADD93672-DEF3-4A65-B8A2-913A1CDA81EA}
