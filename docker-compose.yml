@@ -1,0 +1,26 @@
+version: '3.4'
+
+services:
+   xershade.ca.website:
+     build: 
+       context: .
+       dockerfile: Dockerfile
+     volumes:
+        - application-data:/app
+     expose:
+        - 80
+     restart: unless-stopped
+     environment:
+        VIRTUAL_HOST: website.xershade.ca
+        LETSENCRYPT_HOST: website.xershade.ca
+        LETSENCRYPT_EMAIL: xershade.ca@gmail.com
+        ASPNETCORE_HTTP_PORTS: 80
+     container_name: xershade.ca.website
+
+volumes:
+  application-data:
+
+networks:
+  default:
+    external:
+      name: system.nginx.proxy
