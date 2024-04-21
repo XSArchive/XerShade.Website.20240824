@@ -1,4 +1,4 @@
-namespace XerShade.Website.Models;
+namespace XerShade.Website.Core.Models;
 
 public class ErrorViewModel
 {

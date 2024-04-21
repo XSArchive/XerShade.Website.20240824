@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using XerShade.Website.Core.Controllers;
 
 namespace XerShade.Website;
 
@@ -10,7 +11,8 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        _ = builder.Services.AddControllersWithViews();
+        _ = builder.Services.AddControllersWithViews()
+            .AddApplicationPart(typeof(HomeController).Assembly);
         _ = builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
 
         _ = builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();

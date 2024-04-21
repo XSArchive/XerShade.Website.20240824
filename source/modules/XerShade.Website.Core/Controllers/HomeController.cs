@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using XerShade.Website.Models;
+using XerShade.Website.Core.Models;
 
-namespace XerShade.Website.Controllers;
+namespace XerShade.Website.Core.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
