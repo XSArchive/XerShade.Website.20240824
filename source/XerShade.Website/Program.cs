@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
+using XerShade.Website.Core.Areas.Account.Data;
+using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
 
 namespace XerShade.Website;
@@ -11,8 +15,21 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+        _ = builder.Services.AddDbContext<AuthenticationDbContext>();
+        _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
+        {
+            options.Password.RequiredLength = 8;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+        })
+            .AddEntityFrameworkStores<AuthenticationDbContext>()
+            .AddDefaultTokenProviders();
+
         _ = builder.Services.AddControllersWithViews()
             .AddApplicationPart(typeof(HomeController).Assembly);
+
         _ = builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
 
         _ = builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
@@ -24,6 +41,13 @@ public class Program
         });
 
         WebApplication app = builder.Build();
+
+        using (IServiceScope scope = app.Services.CreateScope())
+        {
+            IServiceProvider services = scope.ServiceProvider;
+
+            services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
+        }
 
         if (!app.Environment.IsDevelopment())
         {
