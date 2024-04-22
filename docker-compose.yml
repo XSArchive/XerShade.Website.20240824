@@ -13,6 +13,8 @@ services:
         LETSENCRYPT_HOST: website.xershade.ca
         LETSENCRYPT_EMAIL: xershade.ca@gmail.com
         ASPNETCORE_HTTP_PORTS: 80
+     env_file:
+        - .env
      container_name: xershade.ca.website
 
 networks:
