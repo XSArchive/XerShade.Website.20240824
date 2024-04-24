@@ -6,6 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
+using XerShade.Website.Core.Data;
 
 namespace XerShade.Website;
 
@@ -14,6 +15,8 @@ public class Program
     public static void Main(string[] args)
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
+
+        _ = builder.Services.AddDbContext<GeneralDbContext>();
 
         _ = builder.Services.AddDbContext<AuthenticationDbContext>();
         _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
@@ -46,6 +49,7 @@ public class Program
         {
             IServiceProvider services = scope.ServiceProvider;
 
+            services.GetRequiredService<GeneralDbContext>().Database.Migrate();
             services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
         }
 
