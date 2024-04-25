@@ -1,12 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
+using XerShade.Website.Core.Data.Models;
 
 namespace XerShade.Website.Core.Data;
 
 public class GeneralDbContext : DbContext
 {
     private readonly string connectionString;
+
+    public DbSet<Option> Options { get; private set; }
 
     public GeneralDbContext()
     {

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using XerShade.Website.Core.Data;
 
@@ -10,9 +11,11 @@ using XerShade.Website.Core.Data;
 namespace XerShade.Website.Core.Data.Migrations
 {
     [DbContext(typeof(GeneralDbContext))]
-    partial class GeneralDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240425061340_AddOptionsTable")]
+    partial class AddOptionsTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
