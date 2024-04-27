@@ -12,6 +12,7 @@ public class RWDService<TDataType> : IRWDService<TDataType> where TDataType : cl
     protected RWDService(GeneralDbContext dbContext) => this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
 
     public virtual TDataType? Read(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().FirstOrDefault(predicate);
+    public virtual List<TDataType>? ReadRange(Expression<Func<TDataType, bool>> predicate) => [.. this.dbContext.Set<TDataType>().Where(predicate)];
     public virtual IQueryable<TDataType>? ReadAll() => this.dbContext.Set<TDataType>();
     public virtual void Write(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
@@ -34,17 +35,18 @@ public class RWDService<TDataType> : IRWDService<TDataType> where TDataType : cl
     }
     public virtual void Delete(Expression<Func<TDataType, bool>> predicate)
     {
-        List<TDataType>? entries = this.dbContext.Set<TDataType>().Where(predicate).ToList();
+        List<TDataType>? entries = [.. this.dbContext.Set<TDataType>().Where(predicate)];
 
-        if (entries?.Count != 0)
-        {
-            this.dbContext.Set<TDataType>().RemoveRange(entries);
+        if (entries is null || entries?.Count != 0)
+        { return; }
 
-            _ = this.dbContext.SaveChanges();
-        }
+        this.dbContext.Set<TDataType>().RemoveRange(entries);
+
+        _ = this.dbContext.SaveChanges();
     }
 
     public virtual async Task<TDataType?> ReadAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate);
+    public virtual async Task<List<TDataType>?> ReadRangeAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().Where(predicate).ToListAsync();
     public virtual async Task<IQueryable<TDataType>?> ReadAllAsync() => await Task.FromResult(this.dbContext.Set<TDataType>());
     public virtual async Task WriteAsync(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
@@ -68,12 +70,12 @@ public class RWDService<TDataType> : IRWDService<TDataType> where TDataType : cl
     public virtual async Task DeleteAsync(Expression<Func<TDataType, bool>> predicate)
     {
         List<TDataType>? entries = await this.dbContext.Set<TDataType>().Where(predicate).ToListAsync();
-        
-        if(entries != null && entries?.Count != 0)
-        {
-            this.dbContext.Set<TDataType>().RemoveRange(entries);
 
-            _ = await this.dbContext.SaveChangesAsync();
-        }
+        if (entries is null || entries?.Count != 0)
+        { return; }
+
+        this.dbContext.Set<TDataType>().RemoveRange(entries);
+
+        _ = await this.dbContext.SaveChangesAsync();
     }
 }
