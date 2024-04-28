@@ -9,7 +9,7 @@ public class RWDService<TDataType> : IRWDService<TDataType> where TDataType : cl
 {
     protected readonly GeneralDbContext dbContext;
 
-    protected RWDService(GeneralDbContext dbContext) => this.dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+    protected RWDService() => this.dbContext = new GeneralDbContext();
 
     public virtual TDataType? Read(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().FirstOrDefault(predicate);
     public virtual List<TDataType>? ReadRange(Expression<Func<TDataType, bool>> predicate) => [.. this.dbContext.Set<TDataType>().Where(predicate)];
