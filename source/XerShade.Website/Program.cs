@@ -7,6 +7,7 @@ using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
 using XerShade.Website.Core.Data;
+using XerShade.Website.Core.Data.Models;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
 
@@ -18,7 +19,7 @@ public class Program
     {
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-        _ = builder.Services.AddDbContext<GeneralDbContext>(ServiceLifetime.Transient);
+        _ = builder.Services.AddDbContext<GeneralDbContext>();
         _ = builder.Services.AddSingleton<IOptionsService, OptionsService>();
 
         _ = builder.Services.AddDbContext<AuthenticationDbContext>();

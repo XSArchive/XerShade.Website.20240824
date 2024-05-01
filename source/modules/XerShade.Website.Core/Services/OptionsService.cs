@@ -4,11 +4,16 @@ using XerShade.Website.Core.Services.Interfaces;
 
 namespace XerShade.Website.Core.Services;
 
-public class OptionsService : RWDService<Option>, IOptionsService
+public class OptionsService : IOptionsService
 {
     private readonly List<Option> optionsCache;
 
-    public OptionsService() : base() => this.optionsCache = this.ReadRange(o => o.AutoLoad) ?? [];
+    public OptionsService()
+    {
+        using RWDService<Option> dbService = new(new());
+
+        this.optionsCache = dbService.ReadRange(o => o.AutoLoad) ?? [];
+    }
 
     public TValue? Read<TValue>(string optionName, TValue? defaultValue = default)
     {
@@ -21,7 +26,9 @@ public class OptionsService : RWDService<Option>, IOptionsService
 
         if (cacheOption is null)
         {
-            Option? dbOption = this.Read(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+            using RWDService<Option> dbService = new(new());
+
+            Option? dbOption = dbService.Read(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
 
             if (dbOption is null)
             {
@@ -46,22 +53,21 @@ public class OptionsService : RWDService<Option>, IOptionsService
         if (string.IsNullOrWhiteSpace(optionName))
         { throw new ArgumentNullException(nameof(optionName)); }
 
-        bool dbAutoLoad = this.Read(option => option.OptionName.ToLower().Equals(optionName.ToLower()))?.AutoLoad ?? false;
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
                                select option as Option).FirstOrDefault() ?? new Option()
                                {
-                                   OptionName = optionName,
-                                   AutoLoad = dbAutoLoad
+                                   OptionName = optionName
                                };
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
 
-        this.Write(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
+        using RWDService<Option> dbService = new(new());
+
+        dbService.Write(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
-            option.AutoLoad = cacheOption.AutoLoad;
         });
     }
     public void Write<TValue>(string optionName, TValue? value, bool autoLoad = false)
@@ -79,7 +85,9 @@ public class OptionsService : RWDService<Option>, IOptionsService
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = autoLoad;
 
-        this.Write(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
+        using RWDService<Option> dbService = new(new());
+
+        dbService.Write(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
@@ -91,8 +99,10 @@ public class OptionsService : RWDService<Option>, IOptionsService
         if (string.IsNullOrWhiteSpace(optionName))
         { throw new ArgumentNullException(nameof(optionName)); }
 
+        using RWDService<Option> dbService = new(new());
+
         _ = this.optionsCache.RemoveAll(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
-        this.Delete(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+        dbService.Delete(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
     }
 
     public virtual async Task<TValue?> ReadAsync<TValue>(string optionName, TValue? defaultValue = default)
@@ -106,7 +116,9 @@ public class OptionsService : RWDService<Option>, IOptionsService
 
         if (cacheOption is null)
         {
-            Option? dbOption = await this.ReadAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+            using RWDService<Option> dbService = new(new());
+
+            Option? dbOption = await dbService.ReadAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
 
             if (dbOption is null)
             {
@@ -131,24 +143,21 @@ public class OptionsService : RWDService<Option>, IOptionsService
         if (string.IsNullOrWhiteSpace(optionName))
         { throw new ArgumentNullException(nameof(optionName)); }
 
-        Option? dbOption = await this.ReadAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
-        bool dbAutoLoad = dbOption?.AutoLoad ?? false;
-
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
                                select option as Option).FirstOrDefault() ?? new Option()
                                {
-                                   OptionName = optionName,
-                                   AutoLoad = dbAutoLoad
+                                   OptionName = optionName
                                };
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
 
-        await this.WriteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
+        using RWDService<Option> dbService = new(new());
+
+        await dbService.WriteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
-            option.AutoLoad = cacheOption.AutoLoad;
         });
     }
     public virtual async Task WriteAsync<TValue>(string optionName, TValue? value, bool autoLoad = false)
@@ -166,7 +175,9 @@ public class OptionsService : RWDService<Option>, IOptionsService
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = autoLoad;
 
-        await this.WriteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
+        using RWDService<Option> dbService = new(new());
+
+        await dbService.WriteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()), (option) =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
@@ -178,7 +189,9 @@ public class OptionsService : RWDService<Option>, IOptionsService
         if (string.IsNullOrWhiteSpace(optionName))
         { throw new ArgumentNullException(nameof(optionName)); }
 
+        using RWDService<Option> dbService = new(new());
+
+        await dbService.DeleteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
         _ = this.optionsCache.RemoveAll(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
-        await this.DeleteAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
     }
 }
