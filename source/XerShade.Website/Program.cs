@@ -8,6 +8,7 @@ using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
 using XerShade.Website.Core.Data;
 using XerShade.Website.Core.Data.Models;
+using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
 
@@ -56,6 +57,8 @@ public class Program
             services.GetRequiredService<GeneralDbContext>().Database.Migrate();
             services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
         }
+
+        app.UseMiddleware<OptionsMiddleware>();
 
         if (!app.Environment.IsDevelopment())
         {

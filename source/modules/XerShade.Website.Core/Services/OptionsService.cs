@@ -15,6 +15,24 @@ public class OptionsService : IOptionsService
         this.optionsCache = dbService.ReadRange(o => o.AutoLoad) ?? [];
     }
 
+    public Dictionary<string, object?> ToDictionary() => this.optionsCache.ToDictionary(option => option.OptionName, option => JsonConvert.DeserializeObject(option.OptionValue));
+
+    public bool Has(string optionName, bool checkCache = true)
+    {
+        if (string.IsNullOrWhiteSpace(optionName))
+        { throw new ArgumentNullException(nameof(optionName)); }
+
+        if (checkCache)
+        {
+            return this.optionsCache.Any(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+        }
+
+        using RWDService<Option> dbService = new(new());
+
+        Option? dbOption = dbService.Read(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+
+        return dbOption is not null;
+    }
     public TValue? Read<TValue>(string optionName, TValue? defaultValue = default)
     {
         if (string.IsNullOrWhiteSpace(optionName))
@@ -55,10 +73,17 @@ public class OptionsService : IOptionsService
 
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
-                               select option as Option).FirstOrDefault() ?? new Option()
-                               {
-                                   OptionName = optionName
-                               };
+                               select option as Option).FirstOrDefault();
+
+        if (cacheOption is null)
+        {
+            cacheOption = new Option()
+            {
+                OptionName = optionName
+            };
+
+            this.optionsCache.Add(cacheOption);
+        }
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
 
@@ -77,10 +102,17 @@ public class OptionsService : IOptionsService
 
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
-                               select option as Option).FirstOrDefault() ?? new Option()
-                               {
-                                   OptionName = optionName
-                               };
+                               select option as Option).FirstOrDefault();
+
+        if (cacheOption is null)
+        {
+            cacheOption = new Option()
+            {
+                OptionName = optionName
+            };
+
+            this.optionsCache.Add(cacheOption);
+        }
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = autoLoad;
@@ -104,7 +136,20 @@ public class OptionsService : IOptionsService
         _ = this.optionsCache.RemoveAll(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
         dbService.Delete(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
     }
+    public virtual async Task<bool> HasAsync(string optionName, bool checkCache = true)
+    {
+        if (string.IsNullOrWhiteSpace(optionName))
+        { throw new ArgumentNullException(nameof(optionName)); }
 
+        if (checkCache)
+        {
+            return this.optionsCache.Any(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+        }
+
+        using RWDService<Option> dbService = new(new());
+
+        return await dbService.HasAsync(option => option.OptionName.ToLower().Equals(optionName.ToLower()));
+    }
     public virtual async Task<TValue?> ReadAsync<TValue>(string optionName, TValue? defaultValue = default)
     {
         if (string.IsNullOrWhiteSpace(optionName))
@@ -145,10 +190,17 @@ public class OptionsService : IOptionsService
 
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
-                               select option as Option).FirstOrDefault() ?? new Option()
-                               {
-                                   OptionName = optionName
-                               };
+                               select option as Option).FirstOrDefault();
+
+        if (cacheOption is null)
+        {
+            cacheOption = new Option()
+            {
+                OptionName = optionName
+            };
+
+            this.optionsCache.Add(cacheOption);
+        }
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
 
@@ -167,10 +219,17 @@ public class OptionsService : IOptionsService
 
         Option? cacheOption = (from option in optionsCache
                                where option.OptionName.ToLower().Equals(optionName.ToLower())
-                               select option as Option).FirstOrDefault() ?? new Option()
-                               {
-                                   OptionName = optionName
-                               };
+                               select option as Option).FirstOrDefault();
+
+        if (cacheOption is null)
+        {
+            cacheOption = new Option()
+            {
+                OptionName = optionName
+            };
+
+            this.optionsCache.Add(cacheOption);
+        }
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = autoLoad;

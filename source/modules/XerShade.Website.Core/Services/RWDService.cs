@@ -21,6 +21,7 @@ public class RWDService<TDataType>(GeneralDbContext dbContext) : IRWDService<TDa
         return this.dbContext.DisposeAsync();
     }
 
+    public virtual bool Has(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().Any(predicate);
     public virtual TDataType? Read(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().FirstOrDefault(predicate);
     public virtual List<TDataType>? ReadRange(Expression<Func<TDataType, bool>> predicate) => [.. this.dbContext.Set<TDataType>().Where(predicate)];
     public virtual IQueryable<TDataType>? ReadAll() => this.dbContext.Set<TDataType>();
@@ -55,6 +56,7 @@ public class RWDService<TDataType>(GeneralDbContext dbContext) : IRWDService<TDa
         _ = this.dbContext.SaveChanges();
     }
 
+    public virtual async Task<bool> HasAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().AnyAsync(predicate);
     public virtual async Task<TDataType?> ReadAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate);
     public virtual async Task<List<TDataType>?> ReadRangeAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().Where(predicate).ToListAsync();
     public virtual async Task<IQueryable<TDataType>?> ReadAllAsync() => await Task.FromResult(this.dbContext.Set<TDataType>());
