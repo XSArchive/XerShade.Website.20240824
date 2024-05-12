@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using XerShade.Website.Application;
+using XerShade.Website.Application.Interfaces;
 using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
@@ -17,8 +19,12 @@ namespace XerShade.Website;
 
 public class Program
 {
+    private static ICoreApplication? coreApplication;
+
     public static void Main(string[] args)
     {
+        coreApplication = new CoreApplication().Build(args);
+
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         _ = builder.Services.AddDbContext<GeneralDbContext>();
@@ -28,11 +34,14 @@ public class Program
         _ = builder.Services.AddDbContext<AuthenticationDbContext>();
         _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
             {
-                options.Password.RequiredLength = 8;
-                options.Password.RequireNonAlphanumeric = false;
-                options.Password.RequireDigit = true;
-                options.Password.RequireLowercase = true;
-                options.Password.RequireUppercase = true;
+                if (coreApplication.Options != null)
+                {
+                    options.Password.RequiredLength = coreApplication.Options.Read("Core.Authentication.RequiredLength", 8);
+                    options.Password.RequireNonAlphanumeric = coreApplication.Options.Read("Core.Authentication.RequireNonAlphanumeric", false);
+                    options.Password.RequireDigit = coreApplication.Options.Read("Core.Authentication.RequireDigit", true);
+                    options.Password.RequireLowercase = coreApplication.Options.Read("Core.Authentication.RequireLowercase", true);
+                    options.Password.RequireUppercase = coreApplication.Options.Read("Core.Authentication.RequireUppercase", true);
+                }
             })
             .AddEntityFrameworkStores<AuthenticationDbContext>()
             .AddDefaultTokenProviders();
@@ -91,5 +100,8 @@ public class Program
             pattern: "{controller=Home}/{action=Index}/{id?}");
 
         app.Run();
+
+        coreApplication.Dispose();
+        coreApplication = null;
     }
 }

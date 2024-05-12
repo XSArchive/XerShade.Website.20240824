@@ -2,6 +2,8 @@
 @{
     Layout = "_Layout";
     ViewBag.Title = "Register";
+
+    var Options = Context.Items["Options"] as Dictionary<string, object>;
 }
 
 <h2>Register</h2>
@@ -39,6 +41,29 @@
     </div>
 
     <div class="form-group">
+        <b>Password Requirements:</b>
+        <ul>
+            <li>Minimum Length: @Options["Core.Authentication.RequiredLength"]</li>
+            @if ((bool)Options["Core.Authentication.RequireNonAlphanumeric"])
+            {
+                <li>Requires at least one non-alphanumeric character.</li>
+            }
+            @if ((bool)Options["Core.Authentication.RequireDigit"])
+            {
+                <li>Requires at least one digit.</li>
+            }
+            @if ((bool)Options["Core.Authentication.RequireLowercase"])
+            {
+                <li>Requires at least one lowercase character.</li>
+            }
+            @if ((bool)Options["Core.Authentication.RequireUppercase"])
+            {
+                <li>Requires at least one uppercase character.</li>
+            }
+        </ul>
+    </div>
+
+    <div class="form-group">
         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "control-label col-md-2" })
         <div class="col-md-10">
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
@@ -57,7 +82,7 @@
 
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
-            <input type="submit" class="btn btn-default" value="Register" />
+            <input type="submit" class="btn btn-primary" value="Register" />
         </div>
     </div>
 }
