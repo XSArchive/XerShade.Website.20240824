@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="..\modules\XerShade.Website.Core\**\*.cshtml" Link="%(RecursiveDir)%(Filename)%(Extension)"/>
+    <Content Include="..\modules\XerShade.Website.Core\**\*.cshtml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

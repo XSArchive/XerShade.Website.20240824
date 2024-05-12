@@ -7,7 +7,8 @@ using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
 using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Data.Models;
+using XerShade.Website.Core.Factories.Population;
+using XerShade.Website.Core.Factories.Population.Interfaces;
 using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
@@ -21,17 +22,18 @@ public class Program
         WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
         _ = builder.Services.AddDbContext<GeneralDbContext>();
+        _ = builder.Services.AddTransient<IOptionsPopulationFactory, OptionsPopulationFactory>();
         _ = builder.Services.AddSingleton<IOptionsService, OptionsService>();
 
         _ = builder.Services.AddDbContext<AuthenticationDbContext>();
         _ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(options =>
-        {
-            options.Password.RequiredLength = 8;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-        })
+            {
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+            })
             .AddEntityFrameworkStores<AuthenticationDbContext>()
             .AddDefaultTokenProviders();
 
@@ -58,7 +60,7 @@ public class Program
             services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
         }
 
-        app.UseMiddleware<OptionsMiddleware>();
+        _ = app.UseMiddleware<OptionsMiddleware>();
 
         if (!app.Environment.IsDevelopment())
         {
