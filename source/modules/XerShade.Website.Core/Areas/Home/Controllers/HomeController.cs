@@ -4,6 +4,8 @@ using System.Diagnostics;
 using XerShade.Website.Core.Models;
 
 namespace XerShade.Website.Core.Controllers;
+
+[Area("Home")]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;

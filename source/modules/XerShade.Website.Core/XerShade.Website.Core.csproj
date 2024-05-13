@@ -12,7 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Home\" />
+    <Folder Include="Areas\Home\Views\Home\" />
     <Folder Include="Views\Shared\" />
   </ItemGroup>
 
