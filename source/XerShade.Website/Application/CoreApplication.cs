@@ -10,12 +10,6 @@ namespace XerShade.Website.Application;
 
 public class CoreApplication : ICoreApplication
 {
-    public IOptionsService? Options { get; private set; }
-
-    protected virtual void MigrateDatabases(IServiceProvider services) => services.GetRequiredService<GeneralDbContext>().Database.Migrate();
-    protected virtual void PopulateServices(IServiceProvider services) => _ = services.GetRequiredService<IOptionsPopulationFactory>().Populate();
-    protected virtual void AssignServices(IServiceProvider services) => this.Options = services.GetRequiredService<IOptionsService>();
-
     public virtual ICoreApplication Build(string[] args)
     {
         IHost host = Host.CreateDefaultBuilder(args)
@@ -25,28 +19,30 @@ public class CoreApplication : ICoreApplication
 
             _ = services.AddSingleton<IOptionsService, OptionsService>();
             _ = services.AddTransient<IOptionsPopulationFactory, OptionsPopulationFactory>();
+            _ = services.AddTransient<IMvcApplication, MvcApplication>();
         })
         .Build();
 
         this.MigrateDatabases(host.Services);
         this.PopulateServices(host.Services);
-        this.AssignServices(host.Services);
+        this.RunApplication(host.Services, args);
 
         return this;
     }
 
     public void Dispose()
     {
-        this.Options = null;
-
         GC.SuppressFinalize(this);
+        return;
     }
 
-    public ValueTask DisposeAsync()
+    public virtual ValueTask DisposeAsync()
     {
-        this.Options = null;
-
         GC.SuppressFinalize(this);
         return ValueTask.CompletedTask;
     }
+
+    protected virtual void MigrateDatabases(IServiceProvider services) => services.GetRequiredService<GeneralDbContext>().Database.Migrate();
+    protected virtual void PopulateServices(IServiceProvider services) => _ = services.GetRequiredService<IOptionsPopulationFactory>().Populate();
+    protected virtual void RunApplication(IServiceProvider services, string[] args) => _ = services.GetRequiredService<IMvcApplication>().Build(args);
 }
