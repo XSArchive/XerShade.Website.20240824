@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using XerShade.Website.Application.Interfaces;
 using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
@@ -13,6 +14,7 @@ using XerShade.Website.Core.Factories.Population.Interfaces;
 using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
+using XerShade.Website.Theme;
 
 namespace XerShade.Website.Application;
 
@@ -81,8 +83,14 @@ public class MvcApplication(IOptionsService optionsService) : IMvcApplication
         }
 
         _ = app.UseHttpsRedirection();
-        _ = app.UseStaticFiles();
 
+        _ = app.UseStaticFiles(new StaticFileOptions());
+
+        _ = app.UseStaticFiles(new StaticFileOptions()
+        {
+            FileProvider = new ManifestEmbeddedFileProvider(typeof(ThemeConfiguration).Assembly)
+        });
+        
         _ = app.UseRouting();
 
         _ = app.UseAuthentication();

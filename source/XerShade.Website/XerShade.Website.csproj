@@ -15,10 +15,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\modules\XerShade.Website.Core\XerShade.Website.Core.csproj" />
+    <ProjectReference Include="..\XerShade.Website.Theme\XerShade.Website.Theme.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <Content Include="..\modules\XerShade.Website.Core\**\*.cshtml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="..\XerShade.Website.Theme\**\*.cshtml" Link="%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Remove="wwwroot\**" />
   </ItemGroup>
 
 </Project>
