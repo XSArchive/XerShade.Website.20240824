@@ -14,7 +14,7 @@ using XerShade.Website.Core.Factories.Population.Interfaces;
 using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
-using XerShade.Website.Theme;
+using XerShade.Website.Theming;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -82,7 +82,7 @@ _ = app.UseStaticFiles(new StaticFileOptions());
 
 _ = app.UseStaticFiles(new StaticFileOptions()
 {
-    FileProvider = new ManifestEmbeddedFileProvider(typeof(ThemeConfiguration).Assembly)
+    FileProvider = new ManifestEmbeddedFileProvider(typeof(DefaultTheme).Assembly)
 });
 
 _ = app.UseRouting();

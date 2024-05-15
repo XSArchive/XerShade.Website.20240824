@@ -20,7 +20,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XerShade.Website.Core", "so
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "themes", "themes", "{F58E9843-A428-4138-8CF7-823CA565F383}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XerShade.Website.Theme", "source\themes\XerShade.Website.Theme\XerShade.Website.Theme.csproj", "{674F93F3-6ED7-4880-9348-AC2CD80C1C4C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XerShade.Website.Theming", "source\themes\XerShade.Website.Theming\XerShade.Website.Theming.csproj", "{674F93F3-6ED7-4880-9348-AC2CD80C1C4C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
