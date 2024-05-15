@@ -10,10 +10,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Areas\Home\Views\Home\" />
+    <EmbeddedResource Include="wwwroot\**\*" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>
@@ -26,14 +23,6 @@
     <PackageReference Include="NewtonSoft.Json" Version="13.0.3" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
     <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="8.0.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\..\XerShade.Website.Theme\XerShade.Website.Theme.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="wwwroot\**\*" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>
