@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 using XerShade.Website.Core.Areas.Account.Data;
 using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Controllers;
@@ -14,8 +15,12 @@ using XerShade.Website.Core.Factories.Population.Interfaces;
 using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
+using XerShade.Website.Managers;
+using XerShade.Website.Managers.Interfaces;
 using XerShade.Website.Theming;
 
+IModuleManager moduleManager = new ModuleManager(Assembly.GetExecutingAssembly()).Discover() as IModuleManager ?? throw new NullReferenceException();
+IThemeManager themeManager = new ThemeManager(Assembly.GetExecutingAssembly()).Discover() as IThemeManager ?? throw new NullReferenceException();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 _ = builder.Services.AddDbContext<GeneralDbContext>();

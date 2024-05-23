@@ -4,5 +4,4 @@ namespace XerShade.Website.Managers.Interfaces;
 
 public interface IThemeManager : IManager<ITheme>
 {
-
 }

@@ -2,4 +2,5 @@
 
 public interface IManager<ObjectType>
 {
+    IManager<ObjectType> Discover();
 }
