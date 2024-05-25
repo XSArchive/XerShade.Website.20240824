@@ -15,17 +15,15 @@ public class Theme : ITheme
 
         if (!RegisteredProviderAssemblies.Contains(assembly))
         {
-            try
+            string? manifestResourceName = assembly.GetManifestResourceNames().FirstOrDefault(name => name.EndsWith("manifest.json"));
+
+            if (!string.IsNullOrEmpty(manifestResourceName))
             {
                 _ = app.UseStaticFiles(new StaticFileOptions()
                 {
                     FileProvider = new ManifestEmbeddedFileProvider(assembly)
                 });
                 _ = RegisteredProviderAssemblies.Add(assembly);
-            }
-            catch
-            {
-                // Do nothing if there are no embedded files to be loaded.
             }
         }
     }
