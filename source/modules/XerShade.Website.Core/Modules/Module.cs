@@ -42,9 +42,7 @@ public abstract class Module : IModule
 
         if (!RegisteredProviderAssemblies.Contains(assembly))
         {
-            string? manifestResourceName = assembly.GetManifestResourceNames().FirstOrDefault(name => name.EndsWith("manifest.json"));
-
-            if (!string.IsNullOrEmpty(manifestResourceName))
+            if (assembly.GetManifestResourceNames().Length != 0)
             {
                 _ = app.UseStaticFiles(new StaticFileOptions()
                 {
