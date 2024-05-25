@@ -28,15 +28,31 @@ public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
 
                     if (Activator.CreateInstance(type) is ObjectType objectInstance)
                     {
-                        if(!this.Objects.Where(o => o?.GetType() != objectInstance.GetType()).Any())
+                        if (!this.Objects.Where(o => o?.GetType() != objectInstance.GetType()).Any())
                         {
                             this.Objects.Add(objectInstance);
                         }
                     }
                 }
-            }            
+            }
         }
 
         return this;
+    }
+
+    public void Execute(Action<ObjectType> action)
+    {
+        foreach (ObjectType obj in this.Objects)
+        {
+            action(obj);
+        }
+    }
+
+    public void ExecuteOnAssemblies(Action<Assembly> action)
+    {
+        foreach (Assembly assembly in this.Assemblies)
+        {
+            action(assembly);
+        }
     }
 }
