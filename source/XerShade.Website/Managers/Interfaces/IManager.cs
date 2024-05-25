@@ -5,6 +5,6 @@ namespace XerShade.Website.Managers.Interfaces;
 public interface IManager<ObjectType>
 {
     IManager<ObjectType> Discover();
-    void Execute(Action<ObjectType> action);
-    void ExecuteOnAssemblies(Action<Assembly> action);
+    IManager<ObjectType> Execute(Action<ObjectType> action);
+    IManager<ObjectType> ExecuteOnAssemblies(Action<Assembly> action);
 }

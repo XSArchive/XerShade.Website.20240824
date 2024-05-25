@@ -40,19 +40,23 @@ public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
         return this;
     }
 
-    public void Execute(Action<ObjectType> action)
+    public IManager<ObjectType> Execute(Action<ObjectType> action)
     {
         foreach (ObjectType obj in this.Objects)
         {
             action(obj);
         }
+
+        return this;
     }
 
-    public void ExecuteOnAssemblies(Action<Assembly> action)
+    public IManager<ObjectType> ExecuteOnAssemblies(Action<Assembly> action)
     {
         foreach (Assembly assembly in this.Assemblies)
         {
             action(assembly);
         }
+
+        return this;
     }
 }
