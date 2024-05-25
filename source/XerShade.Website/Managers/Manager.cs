@@ -5,16 +5,21 @@ namespace XerShade.Website.Managers;
 
 public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
 {
-    private readonly Assembly Assembly = assembly;
-    private readonly List<Assembly> Assemblies = [];
-    private readonly List<ObjectType> Objects = [];
+    protected readonly Assembly Assembly = assembly ?? throw new ArgumentNullException();
+    protected readonly List<Assembly> Assemblies = [];
+    protected readonly List<ObjectType> Objects = [];
 
-    public IManager<ObjectType> Discover()
+    public virtual IManager<ObjectType> Discover()
     {
         Assembly[] referencedAssemblies = this.Assembly.GetReferencedAssemblies().Select(Assembly.Load).ToArray();
 
         foreach (Assembly? assembly in referencedAssemblies)
         {
+            if (this.Assemblies.Where(a => !string.IsNullOrWhiteSpace(a.FullName) && a.FullName.Equals(assembly.FullName)).Any())
+            {
+                continue;
+            }
+
             IEnumerable<Type> objects = assembly.GetTypes().Where(t => typeof(ObjectType).IsAssignableFrom(t) && !t.IsInterface && !t.IsAbstract);
 
             if (objects.Any())
@@ -40,7 +45,7 @@ public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
         return this;
     }
 
-    public IManager<ObjectType> Execute(Action<ObjectType> action)
+    public virtual IManager<ObjectType> Execute(Action<ObjectType> action)
     {
         foreach (ObjectType obj in this.Objects)
         {
@@ -50,7 +55,17 @@ public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
         return this;
     }
 
-    public IManager<ObjectType> ExecuteOnAssemblies(Action<Assembly> action)
+    public virtual IManager<ObjectType> Execute(Action<ObjectType, WebApplication> action, WebApplication app)
+    {
+        foreach (ObjectType obj in this.Objects)
+        {
+            action(obj, app);
+        }
+
+        return this;
+    }
+
+    public virtual IManager<ObjectType> ExecuteOnAssemblies(Action<Assembly> action)
     {
         foreach (Assembly assembly in this.Assemblies)
         {

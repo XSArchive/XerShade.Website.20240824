@@ -1,49 +1,18 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.Options;
 using System.Reflection;
-using XerShade.Website.Core.Areas.Account.Data;
-using XerShade.Website.Core.Areas.Account.Data.Models;
-using XerShade.Website.Core.Controllers;
-using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Factories.Population;
-using XerShade.Website.Core.Factories.Population.Interfaces;
-using XerShade.Website.Core.Middleware;
-using XerShade.Website.Core.Services;
-using XerShade.Website.Core.Services.Interfaces;
 using XerShade.Website.Managers;
 using XerShade.Website.Managers.Interfaces;
-using XerShade.Website.Theming;
 
 IModuleManager moduleManager = new ModuleManager(Assembly.GetExecutingAssembly()).Discover() as IModuleManager ?? throw new NullReferenceException();
 IThemeManager themeManager = new ThemeManager(Assembly.GetExecutingAssembly()).Discover() as IThemeManager ?? throw new NullReferenceException();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-_ = builder.Services.AddDbContext<GeneralDbContext>();
-_ = builder.Services.AddTransient<IOptionsPopulationFactory, OptionsPopulationFactory>();
-_ = builder.Services.AddSingleton<IOptionsService, OptionsService>();
+_ = moduleManager.Execute((module, services) => module.RegisterDbContexts(services), builder.Services);
 
-_ = builder.Services.AddDbContext<AuthenticationDbContext>();
-_ = builder.Services.AddIdentity<ApplicationUser, ApplicationRole>()
-    .AddEntityFrameworkStores<AuthenticationDbContext>()
-    .AddDefaultTokenProviders();
+_ = moduleManager.Execute((module, services) => module.RegisterServices(services), builder.Services);
 
-_ = builder.Services.AddControllersWithViews()
-    .AddApplicationPart(typeof(HomeController).Assembly);
+_ = moduleManager.Execute((module, services) => module.RegisterIdentity(services), builder.Services);
 
-_ = builder.Services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
-
-_ = builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-_ = builder.Services.AddScoped<IUrlHelper>(x =>
-{
-    ActionContext? actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
-    IUrlHelperFactory factory = x.GetRequiredService<IUrlHelperFactory>();
-    return factory.GetUrlHelper(context: actionContext ?? throw new NullReferenceException());
-});
+_ = moduleManager.Execute((module, builder) => module.RegisterControllers(builder), builder.Services.AddControllersWithViews());
 
 WebApplication app = builder.Build();
 
@@ -51,56 +20,18 @@ using (IServiceScope scope = app.Services.CreateScope())
 {
     IServiceProvider services = scope.ServiceProvider;
 
-    services.GetRequiredService<GeneralDbContext>().Database.Migrate();
-    services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
+    _ = moduleManager.Execute((module, services) => module.MigrateDbContexts(services), services);
 
-    IOptionsService? optionsService = services.GetService<IOptionsService>();
-    IdentityOptions? identityOptions = services.GetService<IOptions<IdentityOptions>>()?.Value;
-
-    if (optionsService != null && identityOptions != null)
-    {
-        identityOptions.Password.RequiredLength = optionsService.Read("Core.Authentication.RequiredLength", 8);
-        identityOptions.Password.RequireNonAlphanumeric = optionsService.Read("Core.Authentication.RequireNonAlphanumeric", false);
-        identityOptions.Password.RequireDigit = optionsService.Read("Core.Authentication.RequireDigit", true);
-        identityOptions.Password.RequireLowercase = optionsService.Read("Core.Authentication.RequireLowercase", true);
-        identityOptions.Password.RequireUppercase = optionsService.Read("Core.Authentication.RequireUppercase", true);
-    }
+    _ = moduleManager.Execute((module, services) => module.ConfigureIdentity(services), services);
 }
 
-_ = app.UseMiddleware<OptionsMiddleware>();
+_ = moduleManager.Execute((module, app) => module.RegisterMiddleware(app), app);
 
-if (!app.Environment.IsDevelopment())
-{
-    _ = app.UseExceptionHandler("/Home/Error");
-    _ = app.UseForwardedHeaders();
-    _ = app.UseHsts();
-}
-else
-{
-    _ = app.UseDeveloperExceptionPage();
-    _ = app.UseForwardedHeaders();
-}
+_ = moduleManager.Execute((module, app) => module.ConfigureEnvironment(app), app);
 
-_ = app.UseHttpsRedirection();
+_ = moduleManager.Execute((module, app) => module.RegisterProviders(app), app);
+_ = themeManager.Execute((theme, app) => theme.RegisterProviders(app), app);
 
-_ = app.UseStaticFiles(new StaticFileOptions());
-
-_ = app.UseStaticFiles(new StaticFileOptions()
-{
-    FileProvider = new ManifestEmbeddedFileProvider(typeof(DefaultTheme).Assembly)
-});
-
-_ = app.UseRouting();
-
-_ = app.UseAuthentication();
-_ = app.UseAuthorization();
-
-_ = app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
-
-_ = app.MapControllerRoute(
-    name: "default",
-    pattern: "{area=Home}/{controller=Home}/{action=Index}/{id?}");
+_ = moduleManager.Execute((module, app) => module.ConfigureRouting(app), app);
 
 app.Run();
