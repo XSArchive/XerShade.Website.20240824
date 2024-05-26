@@ -3,7 +3,7 @@ using XerShade.Website.Core.Services.Interfaces;
 
 namespace XerShade.Website.Core.Factories.Population;
 
-public class OptionsPopulationFactory(IOptionsService service) : PopulationFactory, IOptionsPopulationFactory
+public class OptionsPopulationFactory(IOptionsService service) : PopulationFactory
 {
     private readonly IOptionsService service = service;
 

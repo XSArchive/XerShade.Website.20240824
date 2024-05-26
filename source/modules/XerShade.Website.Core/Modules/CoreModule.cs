@@ -12,7 +12,6 @@ using XerShade.Website.Core.Areas.Account.Data.Models;
 using XerShade.Website.Core.Data;
 using XerShade.Website.Core.Factories.Population;
 using XerShade.Website.Core.Factories.Population.Interfaces;
-using XerShade.Website.Core.Middleware;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
 
@@ -82,8 +81,6 @@ public class CoreModule : Module
 
     public override void RegisterIdentity(IServiceCollection services) => _ = services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<AuthenticationDbContext>().AddDefaultTokenProviders();
 
-    public override void RegisterMiddleware(WebApplication app) => _ = app.UseMiddleware<OptionsMiddleware>();
-
     public override void RegisterProviders(WebApplication app)
     {
         _ = app.UseStaticFiles(new StaticFileOptions());
@@ -93,7 +90,7 @@ public class CoreModule : Module
 
     public override void RegisterServices(IServiceCollection services)
     {
-        _ = services.AddTransient<IOptionsPopulationFactory, OptionsPopulationFactory>();
+        _ = services.AddTransient<IPopulationFactory, OptionsPopulationFactory>();
         _ = services.AddSingleton<IOptionsService, OptionsService>();
 
         _ = services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
@@ -105,5 +102,7 @@ public class CoreModule : Module
             IUrlHelperFactory factory = x.GetRequiredService<IUrlHelperFactory>();
             return factory.GetUrlHelper(context: actionContext ?? throw new NullReferenceException());
         });
+
+        _ = services.AddHostedService<PopulationService>();
     }
 }
