@@ -15,8 +15,6 @@ public class OptionsService : IOptionsService
         this.optionsCache = dbService.ReadRange(o => o.AutoLoad) ?? [];
     }
 
-    public Dictionary<string, object?> ToDictionary() => this.optionsCache.ToDictionary(option => option.OptionName, option => JsonConvert.DeserializeObject(option.OptionValue));
-
     public bool Has(string optionName, bool checkCache = true)
     {
         if (string.IsNullOrWhiteSpace(optionName))

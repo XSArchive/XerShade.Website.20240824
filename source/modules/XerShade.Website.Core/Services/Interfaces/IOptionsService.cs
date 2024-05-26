@@ -4,8 +4,6 @@ namespace XerShade.Website.Core.Services.Interfaces;
 
 public interface IOptionsService
 {
-    Dictionary<string, object?> ToDictionary();
-
     bool Has(string optionName, bool checkCache = true);
     TValue? Read<TValue>(string optionName, TValue? defaultValue = default);
     void Write<TValue>(string optionName, TValue? value);
