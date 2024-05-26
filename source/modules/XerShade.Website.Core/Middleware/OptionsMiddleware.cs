@@ -10,7 +10,7 @@ public class OptionsMiddleware(RequestDelegate next, IOptionsPopulationFactory p
 
     public async Task Invoke(HttpContext context)
     {
-        await this.populationFactory.Populate();
+        await this.populationFactory.PopulateAsync();
 
         await this.next(context);
     }

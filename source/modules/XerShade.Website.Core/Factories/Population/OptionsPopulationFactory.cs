@@ -3,9 +3,11 @@ using XerShade.Website.Core.Services.Interfaces;
 
 namespace XerShade.Website.Core.Factories.Population;
 
-public class OptionsPopulationFactory(IOptionsService service) : AsyncPopulationFactory<IOptionsService>(service), IOptionsPopulationFactory
+public class OptionsPopulationFactory(IOptionsService service) : PopulationFactory, IOptionsPopulationFactory
 {
-    public override async Task Populate()
+    private readonly IOptionsService service = service;
+
+    public override async Task PopulateAsync()
     {
         await this.PopulateOption("Core.Website.Name", "XerShade's Corner");
         await this.PopulateOption("Core.Website.Description", "My little corner of the internet.");
@@ -25,5 +27,7 @@ public class OptionsPopulationFactory(IOptionsService service) : AsyncPopulation
         {
             await this.service.WriteAsync(optionName, optionValue, true);
         }
+
+        await base.PopulateAsync();
     }
 }

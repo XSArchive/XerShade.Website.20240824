@@ -1,6 +1,8 @@
-﻿namespace XerShade.Website.Core.Factories.Population.Interfaces;
+﻿
+namespace XerShade.Website.Core.Factories.Population.Interfaces;
 
-public interface IPopulationFactory<ServiceClass> where ServiceClass : class
+public interface IPopulationFactory
 {
     void Populate();
+    Task PopulateAsync();
 }
