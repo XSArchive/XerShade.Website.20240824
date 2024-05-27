@@ -8,49 +8,49 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
 {
     private readonly IDbContextFactory<GeneralDbContext> contextFactory = contextFactory;
 
-    public virtual async Task<DataType> GetAsync(Expression<Func<DataType, bool>> predicate)
+    public async Task<DataType> GetAsync(Expression<Func<DataType, bool>> predicate)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         return await dbcontext.Set<DataType>().Where(predicate).FirstOrDefaultAsync() ?? throw new NullReferenceException();
     }
 
-    public virtual async Task<IEnumerable<DataType>> GetRangeAsync(Expression<Func<DataType, bool>> predicate)
+    public async Task<IEnumerable<DataType>> GetRangeAsync(Expression<Func<DataType, bool>> predicate)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         return await dbcontext.Set<DataType>().Where(predicate).ToListAsync();
     }
 
-    public virtual async Task<IEnumerable<DataType>> GetAllAsync()
+    public async Task<IEnumerable<DataType>> GetAllAsync()
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         return await dbcontext.Set<DataType>().ToListAsync();
     }
 
-    public virtual async Task<DataType> GetByIdAsync(int id)
+    public async Task<DataType> GetByIdAsync(int id)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         return await dbcontext.Set<DataType>().FindAsync(id) ?? throw new NullReferenceException();
     }
 
-    public virtual async Task AddAsync(DataType entity)
+    public async Task AddAsync(DataType entity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         _ = await dbcontext.Set<DataType>().AddAsync(entity);
     }
 
-    public virtual async Task AddRangeAsync(IEnumerable<DataType> entities)
+    public async Task AddRangeAsync(IEnumerable<DataType> entities)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
         await dbcontext.Set<DataType>().AddRangeAsync(entities);
     }
 
-    public virtual Task RemoveAsync(DataType entity)
+    public Task RemoveAsync(DataType entity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -59,7 +59,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return Task.CompletedTask;
     }
 
-    public virtual Task RemoveRangeAsync(IEnumerable<DataType> entities)
+    public Task RemoveRangeAsync(IEnumerable<DataType> entities)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -68,7 +68,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return Task.CompletedTask;
     }
 
-    public virtual async Task RemoveRangeAsync(Expression<Func<DataType, bool>> predicate)
+    public async Task RemoveRangeAsync(Expression<Func<DataType, bool>> predicate)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -79,7 +79,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         }
     }
 
-    public virtual async Task RemoveByIdAsync(int id)
+    public async Task RemoveByIdAsync(int id)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -90,7 +90,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         }
     }
 
-    public virtual Task UpdateAsync(DataType entity)
+    public Task UpdateAsync(DataType entity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -99,7 +99,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return Task.CompletedTask;
     }
 
-    public virtual Task UpdateRangeAsync(IEnumerable<DataType> entities)
+    public Task UpdateRangeAsync(IEnumerable<DataType> entities)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -108,7 +108,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return Task.CompletedTask;
     }
 
-    public virtual async Task UpdateByIdAsync(int id, DataType updatedEntity)
+    public async Task UpdateByIdAsync(int id, DataType updatedEntity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
         DataType? entity = await dbcontext.Set<DataType>().FindAsync(id) ?? throw new NullReferenceException();
@@ -117,7 +117,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         _ = dbcontext.Set<DataType>().Update(entity);
     }
 
-    public virtual async Task SaveChangesAsync()
+    public async Task SaveChangesAsync()
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
