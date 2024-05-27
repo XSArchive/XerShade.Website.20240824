@@ -15,6 +15,13 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return await dbcontext.Set<DataType>().Where(predicate).FirstOrDefaultAsync() ?? throw new NullReferenceException();
     }
 
+    public async Task<DataType> GetByIdAsync(int id)
+    {
+        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
+
+        return await dbcontext.Set<DataType>().FindAsync(id) ?? throw new NullReferenceException();
+    }
+
     public async Task<IEnumerable<DataType>> GetRangeAsync(Expression<Func<DataType, bool>> predicate)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
@@ -29,13 +36,6 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return await dbcontext.Set<DataType>().ToListAsync();
     }
 
-    public async Task<DataType> GetByIdAsync(int id)
-    {
-        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
-
-        return await dbcontext.Set<DataType>().FindAsync(id) ?? throw new NullReferenceException();
-    }
-
     public async Task AddAsync(DataType entity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
@@ -43,7 +43,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         _ = await dbcontext.Set<DataType>().AddAsync(entity);
     }
 
-    public async Task AddRangeAsync(IEnumerable<DataType> entities)
+    public async Task AddAsync(IEnumerable<DataType> entities)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -59,27 +59,7 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return Task.CompletedTask;
     }
 
-    public Task RemoveRangeAsync(IEnumerable<DataType> entities)
-    {
-        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
-
-        dbcontext.Set<DataType>().RemoveRange(entities);
-
-        return Task.CompletedTask;
-    }
-
-    public async Task RemoveRangeAsync(Expression<Func<DataType, bool>> predicate)
-    {
-        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
-
-        List<DataType> entities = await dbcontext.Set<DataType>().Where(predicate).ToListAsync();
-        if (entities.Count != 0)
-        {
-            dbcontext.Set<DataType>().RemoveRange(entities);
-        }
-    }
-
-    public async Task RemoveByIdAsync(int id)
+    public async Task RemoveAsync(int id)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
@@ -90,31 +70,24 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         }
     }
 
-    public Task UpdateAsync(DataType entity)
+    public Task RemoveAsync(IEnumerable<DataType> entities)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
-        _ = dbcontext.Set<DataType>().Update(entity);
+        dbcontext.Set<DataType>().RemoveRange(entities);
 
         return Task.CompletedTask;
     }
 
-    public Task UpdateRangeAsync(IEnumerable<DataType> entities)
+    public async Task RemoveAsync(Expression<Func<DataType, bool>> predicate)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
 
-        dbcontext.Set<DataType>().UpdateRange(entities);
-
-        return Task.CompletedTask;
-    }
-
-    public async Task UpdateByIdAsync(int id, DataType updatedEntity)
-    {
-        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
-        DataType? entity = await dbcontext.Set<DataType>().FindAsync(id) ?? throw new NullReferenceException();
-
-        dbcontext.Entry(entity).CurrentValues.SetValues(updatedEntity);
-        _ = dbcontext.Set<DataType>().Update(entity);
+        List<DataType> entities = await dbcontext.Set<DataType>().Where(predicate).ToListAsync();
+        if (entities.Count != 0)
+        {
+            dbcontext.Set<DataType>().RemoveRange(entities);
+        }
     }
 
     public async Task SaveChangesAsync()
