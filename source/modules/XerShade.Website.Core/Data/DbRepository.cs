@@ -36,6 +36,13 @@ public class DbRepository<DataType>(IDbContextFactory<GeneralDbContext> contextF
         return await dbcontext.Set<DataType>().ToListAsync();
     }
 
+    public async Task<IEnumerable<DataType>> FindAsync(Expression<Func<DataType, bool>> predicate)
+    {
+        using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
+
+        return await dbcontext.Set<DataType>().Where(predicate).ToListAsync();
+    }
+
     public async Task AddAsync(DataType entity)
     {
         using GeneralDbContext dbcontext = this.contextFactory.CreateDbContext();
