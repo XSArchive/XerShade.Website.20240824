@@ -75,7 +75,7 @@ public class CoreModule : Module
 
     public override void RegisterDbContexts(IServiceCollection services)
     {
-        _ = services.AddDbContext<GeneralDbContext>();
+        _ = services.AddDbContextFactory<GeneralDbContext>();
         _ = services.AddDbContext<AuthenticationDbContext>();
     }
 
