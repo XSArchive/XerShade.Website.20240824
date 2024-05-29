@@ -7,18 +7,15 @@ using XerShade.Website.Core.Services.Interfaces;
 
 namespace XerShade.Website.Core.Services;
 
-public class OptionsService : IOptionsService
+public class OptionsService : DbStaticService<Option>, IOptionsService
 {
     private readonly ConcurrentDictionary<string, Option> OptionsCache;
-    private readonly IDbContextFactory<GeneralDbContext> DbContextFactory;
 
     private static string NormalizeOptionName(string optionName) => optionName.ToLower();
-    private RWDService<Option> CreateDbService() => new(this.DbContextFactory.CreateDbContext());
 
-    public OptionsService(IDbContextFactory<GeneralDbContext> dbContextFactory)
+    public OptionsService(IDbContextFactory<GeneralDbContext> dbContextFactory) : base(dbContextFactory)
     {
-        this.DbContextFactory = dbContextFactory;
-        List<Option> options = this.CreateDbService().ReadRange(o => o.AutoLoad) ?? [];
+        List<Option> options = base.ReadRange(o => o.AutoLoad) ?? [];
         OptionsCache = new ConcurrentDictionary<string, Option>(options.ToDictionary(opt => opt.OptionName.ToLower()));
     }
 
@@ -32,7 +29,7 @@ public class OptionsService : IOptionsService
         if (checkCache && OptionsCache.ContainsKey(normalizedOptionName))
             return true;
 
-        Option? dbOption = this.CreateDbService().Read(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+        Option? dbOption = base.Read(option => option.OptionName.ToLower().Equals(normalizedOptionName));
         return dbOption != null;
     }
 
@@ -45,7 +42,7 @@ public class OptionsService : IOptionsService
 
         if (!OptionsCache.TryGetValue(normalizedOptionName, out Option? cacheOption))
         {
-            cacheOption = this.CreateDbService().Read(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+            cacheOption = base.Read(option => option.OptionName.ToLower().Equals(normalizedOptionName));
 
             if (cacheOption == null)
             {
@@ -76,7 +73,7 @@ public class OptionsService : IOptionsService
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = (autoLoad != cacheOption.AutoLoad) ? autoLoad : cacheOption.AutoLoad;
 
-        this.CreateDbService().Write(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
+        base.Write(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
@@ -92,7 +89,7 @@ public class OptionsService : IOptionsService
         string normalizedOptionName = NormalizeOptionName(optionName);
 
         _ = OptionsCache.TryRemove(normalizedOptionName, out _);
-        this.CreateDbService().Delete(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+        base.Delete(option => option.OptionName.ToLower().Equals(normalizedOptionName));
     }
 
     public async Task<bool> HasAsync(string optionName, bool checkCache = true)
@@ -103,7 +100,7 @@ public class OptionsService : IOptionsService
         string normalizedOptionName = NormalizeOptionName(optionName);
 
         return (checkCache && OptionsCache.ContainsKey(normalizedOptionName))
-               || await this.CreateDbService().HasAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+               || await base.HasAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
     }
 
     public async Task<TValue> ReadAsync<TValue>(string optionName, TValue defaultValue)
@@ -115,7 +112,7 @@ public class OptionsService : IOptionsService
 
         if (!OptionsCache.TryGetValue(normalizedOptionName, out Option? cacheOption))
         {
-            cacheOption = await this.CreateDbService().ReadAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+            cacheOption = await base.ReadAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
 
             if (cacheOption == null)
             {
@@ -146,7 +143,7 @@ public class OptionsService : IOptionsService
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
         cacheOption.AutoLoad = (autoLoad != cacheOption.AutoLoad) ? autoLoad : cacheOption.AutoLoad;
 
-        await this.CreateDbService().WriteAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
+        await base.WriteAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
         {
             option.OptionName = cacheOption.OptionName;
             option.OptionValue = cacheOption.OptionValue;
@@ -162,6 +159,6 @@ public class OptionsService : IOptionsService
         string normalizedOptionName = NormalizeOptionName(optionName);
 
         _ = OptionsCache.TryRemove(normalizedOptionName, out _);
-        await this.CreateDbService().DeleteAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
+        await base.DeleteAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName));
     }
 }

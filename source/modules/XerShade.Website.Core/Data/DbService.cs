@@ -1,13 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
-using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Services.Interfaces;
+using XerShade.Website.Core.Data.Interfaces;
 
-namespace XerShade.Website.Core.Services;
+namespace XerShade.Website.Core.Data;
 
-public class RWDService<TDataType>(GeneralDbContext dbContext) : IRWDService<TDataType>, IDisposable, IAsyncDisposable where TDataType : class
+public class DbService<TDataType>(GeneralDbContext dbContext) : IDisposable, IAsyncDisposable, IDbService<TDataType> where TDataType : class
 {
-    private readonly GeneralDbContext dbContext = dbContext;
+    protected readonly GeneralDbContext dbContext = dbContext;
 
     public void Dispose()
     {
@@ -59,7 +58,7 @@ public class RWDService<TDataType>(GeneralDbContext dbContext) : IRWDService<TDa
 
     public virtual async Task WriteAsync(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
-        TDataType entry = await this.dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate) ?? this.CreateNewEntity(writeAction);
+        TDataType entry = await this.dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate) ?? await this.CreateNewEntityAsync(writeAction);
 
         writeAction(entry);
 
@@ -84,6 +83,16 @@ public class RWDService<TDataType>(GeneralDbContext dbContext) : IRWDService<TDa
         writeAction(newEntity);
 
         _ = this.dbContext.Set<TDataType>().Add(newEntity);
+        return newEntity;
+    }
+
+    private async Task<TDataType> CreateNewEntityAsync(Action<TDataType> writeAction)
+    {
+        TDataType newEntity = Activator.CreateInstance<TDataType>();
+
+        writeAction(newEntity);
+
+        _ = await this.dbContext.Set<TDataType>().AddAsync(newEntity);
         return newEntity;
     }
 }
