@@ -1,5 +1,4 @@
-﻿using XerShade.Website.Core.Factories.Population.Interfaces;
-using XerShade.Website.Core.Services.Interfaces;
+﻿using XerShade.Website.Core.Services.Interfaces;
 
 namespace XerShade.Website.Core.Factories.Population;
 
@@ -17,6 +16,8 @@ public class OptionsPopulationFactory(IOptionsService service) : PopulationFacto
         await this.PopulateOption("Core.Authentication.RequireDigit", true);
         await this.PopulateOption("Core.Authentication.RequireLowercase", true);
         await this.PopulateOption("Core.Authentication.RequireUppercase", true);
+
+        await base.PopulateAsync();
     }
 
     protected async Task PopulateOption<TValue>(string optionName, TValue optionValue)
@@ -27,7 +28,5 @@ public class OptionsPopulationFactory(IOptionsService service) : PopulationFacto
         {
             await this.service.WriteAsync(optionName, optionValue, true);
         }
-
-        await base.PopulateAsync();
     }
 }
