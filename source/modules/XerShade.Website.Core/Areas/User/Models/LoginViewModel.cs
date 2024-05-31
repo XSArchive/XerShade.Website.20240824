@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace XerShade.Website.Core.Areas.Account.Models;
+namespace XerShade.Website.Core.Areas.User.Models;
 
 public class LoginViewModel
 {

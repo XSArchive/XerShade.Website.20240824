@@ -4,11 +4,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using XerShade.Website.Core.Areas.Account.Data;
+using XerShade.Website.Core.Areas.User.Data;
 
 #nullable disable
 
-namespace XerShade.Website.Core.Areas.Account.Data.Migrations
+namespace XerShade.Website.Core.Areas.User.Data.Migrations
 {
     [DbContext(typeof(AuthenticationDbContext))]
     partial class AuthenticationDbContextModelSnapshot : ModelSnapshot
@@ -128,7 +128,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationRole", b =>
+            modelBuilder.Entity("XerShade.Website.Core.Areas.User.Data.Models.ApplicationRole", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -154,7 +154,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
                     b.ToTable("AspNetRoles", (string)null);
                 });
 
-            modelBuilder.Entity("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationUser", b =>
+            modelBuilder.Entity("XerShade.Website.Core.Areas.User.Data.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("varchar(255)");
@@ -220,7 +220,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationRole", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -229,7 +229,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationUser", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -238,7 +238,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationUser", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -247,13 +247,13 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationRole", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationRole", null)
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationUser", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -262,7 +262,7 @@ namespace XerShade.Website.Core.Areas.Account.Data.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.HasOne("XerShade.Website.Core.Areas.Account.Data.Models.ApplicationUser", null)
+                    b.HasOne("XerShade.Website.Core.Areas.User.Data.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)

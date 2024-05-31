@@ -16,7 +16,7 @@
         @if (User.Identity.IsAuthenticated)
         {
             <li class="nav-item">
-                <form class="form-inline" asp-area="Account" asp-controller="Session" asp-action="Logout" method="post">
+                <form class="form-inline" asp-area="User" asp-controller="Session" asp-action="Logout" method="post">
                     <button type="submit" class="btn btn-link nav-link">Logout</button>
                 </form>
             </li>
@@ -24,10 +24,10 @@
         else
         {
             <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("Login", "Session", new { area = "Account" })">Login</a>
+                <a class="nav-link" href="@Url.Action("Login", "Session", new { area = "User" })">Login</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="@Url.Action("Register", "Management", new { area = "Account" })">Register</a>
+                <a class="nav-link" href="@Url.Action("Register", "Session", new { area = "User" })">Register</a>
             </li>
         }
     </ul>

@@ -2,9 +2,9 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-using XerShade.Website.Core.Areas.Account.Data.Models;
+using XerShade.Website.Core.Areas.User.Data.Models;
 
-namespace XerShade.Website.Core.Areas.Account.Data;
+namespace XerShade.Website.Core.Areas.User.Data;
 
 public class AuthenticationDbContext : IdentityDbContext<ApplicationUser, ApplicationRole, string>
 {

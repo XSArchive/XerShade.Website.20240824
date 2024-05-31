@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace XerShade.Website.Core.Areas.Account.Data.Migrations
+namespace XerShade.Website.Core.Areas.User.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

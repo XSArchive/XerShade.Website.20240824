@@ -1,9 +1,9 @@
-@model XerShade.Website.Core.Areas.Account.Models.RegisterViewModel
+@model XerShade.Website.Core.Areas.User.Models.RegisterViewModel
+@using XerShade.Website.Core.Services.Interfaces
+@inject IOptionsService Options
 @{
     Layout = "_Layout";
     ViewBag.Title = "Register";
-
-    var Options = Context.Items["Options"] as Dictionary<string, object>;
 }
 
 <h2>Register</h2>
@@ -20,7 +20,7 @@
     </div>
 }
 
-@using (Html.BeginForm("Register", "Management", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
+@using (Html.BeginForm("Register", "Session", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
 {
     @Html.AntiForgeryToken()
 
@@ -43,20 +43,20 @@
     <div class="form-group">
         <b>Password Requirements:</b>
         <ul>
-            <li>Minimum Length: @Options["Core.Authentication.RequiredLength"]</li>
-            @if ((bool)Options["Core.Authentication.RequireNonAlphanumeric"])
+            <li>Minimum Length: @Options.Read("Core.Authentication.RequiredLength", 8)</li>
+            @if (Options.Read("Core.Authentication.RequireNonAlphanumeric", false))
             {
                 <li>Requires at least one non-alphanumeric character.</li>
             }
-            @if ((bool)Options["Core.Authentication.RequireDigit"])
+            @if (Options.Read("Core.Authentication.RequireDigit", true))
             {
                 <li>Requires at least one digit.</li>
             }
-            @if ((bool)Options["Core.Authentication.RequireLowercase"])
+            @if (Options.Read("Core.Authentication.RequireLowercase", true))
             {
                 <li>Requires at least one lowercase character.</li>
             }
-            @if ((bool)Options["Core.Authentication.RequireUppercase"])
+            @if (Options.Read("Core.Authentication.RequireUppercase", true))
             {
                 <li>Requires at least one uppercase character.</li>
             }
