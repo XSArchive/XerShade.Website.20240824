@@ -19,6 +19,8 @@ public abstract class Module : IModule
 
     public virtual void MigrateDbContexts(IServiceProvider services) { }
 
+    public virtual void PopulateDbContexts(IServiceProvider services) { }
+
     public virtual void RegisterControllers(IMvcBuilder builder)
     {
         Assembly assembly = this.GetType().Assembly;

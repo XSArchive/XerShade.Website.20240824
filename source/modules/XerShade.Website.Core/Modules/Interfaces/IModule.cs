@@ -9,6 +9,7 @@ public interface IModule
     void ConfigureIdentity(IServiceProvider services);
     void ConfigureRouting(WebApplication app);
     void MigrateDbContexts(IServiceProvider services);
+    void PopulateDbContexts(IServiceProvider services);
     void RegisterControllers(IMvcBuilder builder);
     void RegisterDbContexts(IServiceCollection services);
     void RegisterIdentity(IServiceCollection services);

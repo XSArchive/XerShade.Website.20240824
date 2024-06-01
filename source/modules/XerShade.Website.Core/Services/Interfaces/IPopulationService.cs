@@ -2,5 +2,6 @@
 
 public interface IPopulationService
 {
-
+    void PopulateFactories();
+    Task PopulateFactoriesAsync();
 }

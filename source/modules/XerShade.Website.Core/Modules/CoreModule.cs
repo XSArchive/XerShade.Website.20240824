@@ -73,6 +73,16 @@ public class CoreModule : Module
         services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
     }
 
+    public override void PopulateDbContexts(IServiceProvider services)
+    {
+        IPopulationService? populationService = services.GetService<IPopulationService>();
+
+        populationService?.PopulateFactories();
+        _ = Task.Run(async () => await (populationService?.PopulateFactoriesAsync() ?? throw new NullReferenceException()));
+
+        base.PopulateDbContexts(services);
+    }
+
     public override void RegisterDbContexts(IServiceCollection services)
     {
         _ = services.AddDbContextFactory<GeneralDbContext>();
@@ -90,6 +100,7 @@ public class CoreModule : Module
 
     public override void RegisterServices(IServiceCollection services)
     {
+        _ = services.AddTransient<IPopulationService, PopulationService>();
         _ = services.AddTransient<IPopulationFactory, OptionsPopulationFactory>();
         _ = services.AddSingleton<IOptionsService, OptionsService>();
 
@@ -102,7 +113,5 @@ public class CoreModule : Module
             IUrlHelperFactory factory = x.GetRequiredService<IUrlHelperFactory>();
             return factory.GetUrlHelper(context: actionContext ?? throw new NullReferenceException());
         });
-
-        _ = services.AddHostedService<PopulationService>();
     }
 }
