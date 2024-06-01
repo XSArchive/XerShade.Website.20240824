@@ -11,32 +11,61 @@ public class DbStaticService<TDataType>(IDbContextFactory<GeneralDbContext> dbCo
     public void Dispose() => GC.SuppressFinalize(this);
     public async ValueTask DisposeAsync() => await Task.Run(() => GC.SuppressFinalize(this));
 
-    public virtual bool Has(Expression<Func<TDataType, bool>> predicate) => this.dbContextFactory.CreateDbContext().Set<TDataType>().Any(predicate);
+    public virtual bool Has(Expression<Func<TDataType, bool>> predicate)
+    {
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        return dbContext.Set<TDataType>().Any(predicate);
+    }
 
-    public virtual TDataType Read(Expression<Func<TDataType, bool>> predicate) => this.dbContextFactory.CreateDbContext().Set<TDataType>().First(predicate);
+    public virtual TDataType Read(Expression<Func<TDataType, bool>> predicate)
+    {
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        return dbContext.Set<TDataType>().First(predicate);
+    }
 
-    public virtual List<TDataType> ReadRange(Expression<Func<TDataType, bool>> predicate) => this.dbContextFactory.CreateDbContext().Set<TDataType>().Where(predicate).ToList();
+    public virtual List<TDataType> ReadRange(Expression<Func<TDataType, bool>> predicate)
+    {
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        return dbContext.Set<TDataType>().Where(predicate).ToList();
+    }
 
-    public virtual IQueryable<TDataType> ReadAll() => this.dbContextFactory.CreateDbContext().Set<TDataType>();
+    public virtual IQueryable<TDataType> ReadAll()
+    {
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        return dbContext.Set<TDataType>();
+    }
 
     public virtual void Write(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
-        TDataType entry = this.dbContextFactory.CreateDbContext().Set<TDataType>().FirstOrDefault(predicate) ?? this.CreateNewEntity(writeAction);
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        TDataType entry = dbContext.Set<TDataType>().FirstOrDefault(predicate) ?? this.CreateNewEntity(writeAction);
 
         writeAction(entry);
 
-        _ = this.dbContextFactory.CreateDbContext().Set<TDataType>().Update(entry);
-        _ = this.dbContextFactory.CreateDbContext().SaveChanges();
+        _ = dbContext.Set<TDataType>().Update(entry);
+        _ = dbContext.SaveChanges();
     }
 
     public virtual void Delete(Expression<Func<TDataType, bool>> predicate)
     {
-        List<TDataType> entries = [.. this.dbContextFactory.CreateDbContext().Set<TDataType>().Where(predicate)];
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        List<TDataType> entries = [.. dbContext.Set<TDataType>().Where(predicate)];
         if (entries.Count != 0)
         {
-            this.dbContextFactory.CreateDbContext().Set<TDataType>().RemoveRange(entries);
-            _ = this.dbContextFactory.CreateDbContext().SaveChanges();
+            dbContext.Set<TDataType>().RemoveRange(entries);
+            _ = dbContext.SaveChanges();
         }
+    }
+
+    private TDataType CreateNewEntity(Action<TDataType> writeAction)
+    {
+        GeneralDbContext dbContext = this.dbContextFactory.CreateDbContext();
+        TDataType newEntity = Activator.CreateInstance<TDataType>();
+
+        writeAction(newEntity);
+
+        _ = dbContext.Set<TDataType>().Add(newEntity);
+        return newEntity;
     }
 
     public virtual async Task<bool> HasAsync(Expression<Func<TDataType, bool>> predicate)
@@ -83,16 +112,6 @@ public class DbStaticService<TDataType>(IDbContextFactory<GeneralDbContext> dbCo
             dbContext.Set<TDataType>().RemoveRange(entries);
             _ = await dbContext.SaveChangesAsync();
         }
-    }
-
-    private TDataType CreateNewEntity(Action<TDataType> writeAction)
-    {
-        TDataType newEntity = Activator.CreateInstance<TDataType>();
-
-        writeAction(newEntity);
-
-        _ = this.dbContextFactory.CreateDbContext().Set<TDataType>().Add(newEntity);
-        return newEntity;
     }
 
     private async Task<TDataType> CreateNewEntityAsync(Action<TDataType> writeAction)
