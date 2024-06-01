@@ -1,6 +1,4 @@
-﻿using XerShade.Website.Core.Data.Models;
-
-namespace XerShade.Website.Core.Services.Interfaces;
+﻿namespace XerShade.Website.Core.Components.Options.Services.Interfaces;
 
 public interface IOptionsService
 {
@@ -10,7 +8,7 @@ public interface IOptionsService
     void Delete(string optionName);
 
     Task<bool> HasAsync(string optionName, bool checkCache = true);
-    Task<TValue> ReadAsync<TValue>(string optionName, TValue defaultValue );
+    Task<TValue> ReadAsync<TValue>(string optionName, TValue defaultValue);
     Task WriteAsync<TValue>(string optionName, TValue value, bool autoLoad = false);
     Task DeleteAsync(string optionName);
 }

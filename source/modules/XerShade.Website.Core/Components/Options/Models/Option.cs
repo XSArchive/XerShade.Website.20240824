@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace XerShade.Website.Core.Data.Models;
+namespace XerShade.Website.Core.Components.Options.Models;
 
 [Table("CoreOptions"), PrimaryKey("OptionId")]
 [Index("OptionName", IsUnique = true)]

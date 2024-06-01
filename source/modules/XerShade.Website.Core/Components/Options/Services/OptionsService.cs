@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System.Collections.Concurrent;
+using XerShade.Website.Core.Components.Options.Models;
+using XerShade.Website.Core.Components.Options.Services.Interfaces;
 using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Data.Models;
-using XerShade.Website.Core.Services.Interfaces;
 
-namespace XerShade.Website.Core.Services;
+namespace XerShade.Website.Core.Components.Options.Services;
 
 public class OptionsService : DbStaticService<Option>, IOptionsService
 {
@@ -68,7 +68,7 @@ public class OptionsService : DbStaticService<Option>, IOptionsService
         Option cacheOption = OptionsCache.GetOrAdd(normalizedOptionName, _ => new Option() { OptionName = optionName });
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
-        cacheOption.AutoLoad = (autoLoad != cacheOption.AutoLoad) ? autoLoad : cacheOption.AutoLoad;
+        cacheOption.AutoLoad = autoLoad != cacheOption.AutoLoad ? autoLoad : cacheOption.AutoLoad;
 
         base.Write(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
         {
@@ -138,7 +138,7 @@ public class OptionsService : DbStaticService<Option>, IOptionsService
         Option cacheOption = OptionsCache.GetOrAdd(normalizedOptionName, _ => new Option() { OptionName = optionName });
 
         cacheOption.OptionValue = JsonConvert.SerializeObject(value);
-        cacheOption.AutoLoad = (autoLoad != cacheOption.AutoLoad) ? autoLoad : cacheOption.AutoLoad;
+        cacheOption.AutoLoad = autoLoad != cacheOption.AutoLoad ? autoLoad : cacheOption.AutoLoad;
 
         await base.WriteAsync(option => option.OptionName.ToLower().Equals(normalizedOptionName), option =>
         {

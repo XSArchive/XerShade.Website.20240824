@@ -9,8 +9,10 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using XerShade.Website.Core.Areas.User.Data;
 using XerShade.Website.Core.Areas.User.Data.Models;
+using XerShade.Website.Core.Components.Options.Factories;
+using XerShade.Website.Core.Components.Options.Services;
+using XerShade.Website.Core.Components.Options.Services.Interfaces;
 using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Factories.Population;
 using XerShade.Website.Core.Factories.Population.Interfaces;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
@@ -107,7 +109,7 @@ public class CoreModule : Module
         _ = services.Configure<ForwardedHeadersOptions>(options => options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto);
 
         _ = services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-        _ = services.AddScoped<IUrlHelper>(x =>
+        _ = services.AddScoped(x =>
         {
             ActionContext? actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
             IUrlHelperFactory factory = x.GetRequiredService<IUrlHelperFactory>();
