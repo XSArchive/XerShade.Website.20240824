@@ -26,11 +26,8 @@ public class OptionsService : DbStaticService<Option>, IOptionsService
 
         string normalizedOptionName = NormalizeOptionName(optionName);
 
-        if (checkCache && OptionsCache.ContainsKey(normalizedOptionName))
-            return true;
-
-        Option? dbOption = base.Read(option => option.OptionName.ToLower().Equals(normalizedOptionName));
-        return dbOption != null;
+        return (checkCache && OptionsCache.ContainsKey(normalizedOptionName))
+               || base.Has(option => option.OptionName.ToLower().Equals(normalizedOptionName));
     }
 
     public TValue Read<TValue>(string optionName, TValue defaultValue)
