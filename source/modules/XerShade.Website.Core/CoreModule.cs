@@ -14,10 +14,11 @@ using XerShade.Website.Core.Components.Options.Services;
 using XerShade.Website.Core.Components.Options.Services.Interfaces;
 using XerShade.Website.Core.Data;
 using XerShade.Website.Core.Factories.Population.Interfaces;
+using XerShade.Website.Core.Modules;
 using XerShade.Website.Core.Services;
 using XerShade.Website.Core.Services.Interfaces;
 
-namespace XerShade.Website.Core.Modules;
+namespace XerShade.Website.Core;
 
 public class CoreModule : Module
 {
