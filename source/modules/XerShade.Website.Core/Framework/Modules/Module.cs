@@ -9,9 +9,30 @@ namespace XerShade.Website.Core.Framework.Modules;
 
 public abstract class Module : IModule
 {
-    private static readonly HashSet<Assembly> RegisteredConfigurationAssemblies = [];
-    private static readonly HashSet<Assembly> RegisteredControllerAssemblies = [];
-    private static readonly HashSet<Assembly> RegisteredProviderAssemblies = [];
+    private static readonly Dictionary<string, HashSet<Assembly>> RegisteredAssemblies = [];
+
+    private static bool HasRegisteredAssembly(string key, Assembly assembly)
+    {
+        if (!RegisteredAssemblies.TryGetValue(key, out HashSet<Assembly>? value))
+        {
+            value = ([]);
+
+            RegisteredAssemblies.Add(key, value);
+
+            _ = value.Add(assembly);
+
+            return false;
+        }
+
+        if (!value.Contains(assembly))
+        {
+            _ = value.Add(assembly);
+
+            return false;
+        }
+
+        return true;
+    }
 
     public virtual void ConfigureEnvironment(WebApplication app) { }
 
@@ -27,11 +48,9 @@ public abstract class Module : IModule
     {
         Assembly assembly = this.GetType().Assembly;
 
-        if (!RegisteredConfigurationAssemblies.Contains(assembly))
+        if (!HasRegisteredAssembly("Configuration", assembly))
         {
             _ = builder.Configuration.AddUserSecrets(assembly);
-
-            _ = RegisteredConfigurationAssemblies.Add(assembly);
         }
     }
 
@@ -39,10 +58,9 @@ public abstract class Module : IModule
     {
         Assembly assembly = this.GetType().Assembly;
 
-        if (!RegisteredControllerAssemblies.Contains(assembly))
+        if (!HasRegisteredAssembly("Controllers", assembly))
         {
             _ = builder.AddApplicationPart(assembly);
-            _ = RegisteredControllerAssemblies.Add(assembly);
         }
     }
 
@@ -56,7 +74,7 @@ public abstract class Module : IModule
     {
         Assembly assembly = this.GetType().Assembly;
 
-        if (!RegisteredProviderAssemblies.Contains(assembly))
+        if (!HasRegisteredAssembly("Providers", assembly))
         {
             if (assembly.GetManifestResourceNames().Length != 0)
             {
@@ -64,7 +82,6 @@ public abstract class Module : IModule
                 {
                     FileProvider = new ManifestEmbeddedFileProvider(assembly)
                 });
-                _ = RegisteredProviderAssemblies.Add(assembly);
             }
         }
     }
