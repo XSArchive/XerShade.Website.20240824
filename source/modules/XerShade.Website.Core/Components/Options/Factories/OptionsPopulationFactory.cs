@@ -1,11 +1,13 @@
-﻿using XerShade.Website.Core.Components.Options.Services.Interfaces;
+﻿using Microsoft.Extensions.Configuration;
+using XerShade.Website.Core.Components.Options.Services.Interfaces;
 using XerShade.Website.Core.Factories.Population;
 
 namespace XerShade.Website.Core.Components.Options.Factories;
 
-public class OptionsPopulationFactory(IOptionsService service) : PopulationFactory
+public class OptionsPopulationFactory(IOptionsService service, IConfiguration configuration) : PopulationFactory
 {
     private readonly IOptionsService service = service;
+    private readonly IConfiguration configuration = configuration;
 
     public override void Populate()
     {
@@ -31,6 +33,13 @@ public class OptionsPopulationFactory(IOptionsService service) : PopulationFacto
         }
     }
 
+    protected void PopulateConfigOption<TValue>(string optionName)
+    {
+        string? optionValue = this.configuration[optionName] ?? throw new NullReferenceException();
+
+        this.PopulateOption(optionName, optionValue);
+    }
+
     public override Task PopulateAsync() => base.PopulateAsync();
 
     protected async Task PopulateOptionAsync<TValue>(string optionName, TValue optionValue)
@@ -41,5 +50,12 @@ public class OptionsPopulationFactory(IOptionsService service) : PopulationFacto
         {
             await service.WriteAsync(optionName, optionValue, true);
         }
+    }
+
+    protected async Task PopulateConfigOptionAsync<TValue>(string optionName)
+    {
+        string? optionValue = this.configuration[optionName] ?? throw new NullReferenceException();
+
+        await this.PopulateOptionAsync(optionName, optionValue);
     }
 }
