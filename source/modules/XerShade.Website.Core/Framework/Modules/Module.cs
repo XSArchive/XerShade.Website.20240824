@@ -25,7 +25,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterConfiguration(WebApplicationBuilder builder)
     {
-        Assembly assembly = GetType().Assembly;
+        Assembly assembly = this.GetType().Assembly;
 
         if (!RegisteredConfigurationAssemblies.Contains(assembly))
         {
@@ -37,7 +37,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterControllers(IMvcBuilder builder)
     {
-        Assembly assembly = GetType().Assembly;
+        Assembly assembly = this.GetType().Assembly;
 
         if (!RegisteredControllerAssemblies.Contains(assembly))
         {
@@ -54,7 +54,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterProviders(WebApplication app)
     {
-        Assembly assembly = GetType().Assembly;
+        Assembly assembly = this.GetType().Assembly;
 
         if (!RegisteredProviderAssemblies.Contains(assembly))
         {
