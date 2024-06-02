@@ -4,9 +4,9 @@ using XerShade.Website.Core.Data.Interfaces;
 
 namespace XerShade.Website.Core.Data;
 
-public class DbService<TDataType>(GeneralDbContext dbContext) : IDisposable, IAsyncDisposable, IDbService<TDataType> where TDataType : class
+public class DbService<TDataType>(DataDbContext dbContext) : IDisposable, IAsyncDisposable, IDbService<TDataType> where TDataType : class
 {
-    protected readonly GeneralDbContext dbContext = dbContext;
+    protected readonly DataDbContext dbContext = dbContext;
 
     public void Dispose()
     {

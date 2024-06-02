@@ -72,7 +72,7 @@ public class CoreModule : Module
 
     public override void MigrateDbContexts(IServiceProvider services)
     {
-        services.GetRequiredService<GeneralDbContext>().Database.Migrate();
+        services.GetRequiredService<DataDbContext>().Database.Migrate();
         services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
     }
 
@@ -88,7 +88,7 @@ public class CoreModule : Module
 
     public override void RegisterDbContexts(IServiceCollection services)
     {
-        _ = services.AddDbContextFactory<GeneralDbContext>();
+        _ = services.AddDbContextFactory<DataDbContext>();
         _ = services.AddDbContext<AuthenticationDbContext>();
     }
 

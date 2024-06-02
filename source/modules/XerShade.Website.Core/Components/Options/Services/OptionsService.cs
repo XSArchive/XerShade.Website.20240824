@@ -13,7 +13,7 @@ public class OptionsService : DbStaticService<Option>, IOptionsService
 
     private static string NormalizeOptionName(string optionName) => optionName.ToLower();
 
-    public OptionsService(IDbContextFactory<GeneralDbContext> dbContextFactory) : base(dbContextFactory)
+    public OptionsService(IDbContextFactory<DataDbContext> dbContextFactory) : base(dbContextFactory)
     {
         List<Option> options = base.ReadRange(o => o.AutoLoad) ?? [];
         OptionsCache = new ConcurrentDictionary<string, Option>(options.ToDictionary(opt => opt.OptionName.ToLower()));

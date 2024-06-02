@@ -10,7 +10,7 @@ using XerShade.Website.Core.Data;
 
 namespace XerShade.Website.Core.Data.Migrations
 {
-    [DbContext(typeof(GeneralDbContext))]
+    [DbContext(typeof(DataDbContext))]
     [Migration("20240424202503_InitialCreate")]
     partial class InitialCreate
     {

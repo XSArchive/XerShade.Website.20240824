@@ -9,7 +9,7 @@ using XerShade.Website.Core.Data;
 
 namespace XerShade.Website.Core.Data.Migrations
 {
-    [DbContext(typeof(GeneralDbContext))]
+    [DbContext(typeof(DataDbContext))]
     partial class GeneralDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)

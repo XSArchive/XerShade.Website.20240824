@@ -5,7 +5,7 @@ using XerShade.Website.Core.Components.Options.Models;
 
 namespace XerShade.Website.Core.Data;
 
-public class GeneralDbContext(IConfiguration configuration) : DbContext
+public class DataDbContext(IConfiguration configuration) : DbContext
 {
     private readonly IConfiguration configuration = configuration;
 
