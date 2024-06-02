@@ -1,6 +1,6 @@
-﻿using XerShade.Website.Core.Factories.Population.Interfaces;
+﻿using XerShade.Website.Core.Framework.Factories.Population.Interfaces;
 
-namespace XerShade.Website.Core.Factories.Population;
+namespace XerShade.Website.Core.Framework.Factories.Population;
 public abstract class PopulationFactory() : IPopulationFactory
 {
     public virtual void Populate() { }

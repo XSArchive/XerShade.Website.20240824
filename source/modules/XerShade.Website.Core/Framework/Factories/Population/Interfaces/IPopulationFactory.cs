@@ -1,5 +1,4 @@
-﻿
-namespace XerShade.Website.Core.Factories.Population.Interfaces;
+﻿namespace XerShade.Website.Core.Framework.Factories.Population.Interfaces;
 
 public interface IPopulationFactory
 {

@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using System.Collections.Concurrent;
 using XerShade.Website.Core.Components.Options.Models;
 using XerShade.Website.Core.Components.Options.Services.Interfaces;
-using XerShade.Website.Core.Data;
+using XerShade.Website.Core.Framework.Data;
 
 namespace XerShade.Website.Core.Components.Options.Services;
 

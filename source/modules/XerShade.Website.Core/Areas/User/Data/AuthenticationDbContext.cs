@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using XerShade.Website.Core.Areas.User.Data.Models;
-using XerShade.Website.Core.Data;
+using XerShade.Website.Core.Framework.Data;
 
 namespace XerShade.Website.Core.Areas.User.Data;
 

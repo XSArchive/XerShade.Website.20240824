@@ -1,4 +1,4 @@
-﻿namespace XerShade.Website.Core.Services.Interfaces;
+﻿namespace XerShade.Website.Core.Framework.Services.Interfaces;
 
 public interface IPopulationService
 {

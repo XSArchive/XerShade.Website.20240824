@@ -12,11 +12,11 @@ using XerShade.Website.Core.Areas.User.Data.Models;
 using XerShade.Website.Core.Components.Options.Factories;
 using XerShade.Website.Core.Components.Options.Services;
 using XerShade.Website.Core.Components.Options.Services.Interfaces;
-using XerShade.Website.Core.Data;
-using XerShade.Website.Core.Factories.Population.Interfaces;
-using XerShade.Website.Core.Modules;
-using XerShade.Website.Core.Services;
-using XerShade.Website.Core.Services.Interfaces;
+using XerShade.Website.Core.Framework.Data;
+using XerShade.Website.Core.Framework.Factories.Population.Interfaces;
+using XerShade.Website.Core.Framework.Modules;
+using XerShade.Website.Core.Framework.Services;
+using XerShade.Website.Core.Framework.Services.Interfaces;
 
 namespace XerShade.Website.Core;
 

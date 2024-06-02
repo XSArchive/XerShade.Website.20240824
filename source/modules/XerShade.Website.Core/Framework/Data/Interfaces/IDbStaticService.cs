@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 
-namespace XerShade.Website.Core.Data.Interfaces;
+namespace XerShade.Website.Core.Framework.Data.Interfaces;
 public interface IDbStaticService<TDataType> where TDataType : class
 {
     void Delete(Expression<Func<TDataType, bool>> predicate);

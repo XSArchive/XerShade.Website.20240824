@@ -3,9 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
-using XerShade.Website.Core.Modules.Interfaces;
+using XerShade.Website.Core.Framework.Modules.Interfaces;
 
-namespace XerShade.Website.Core.Modules;
+namespace XerShade.Website.Core.Framework.Modules;
 
 public abstract class Module : IModule
 {
@@ -25,7 +25,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterConfiguration(WebApplicationBuilder builder)
     {
-        Assembly assembly = this.GetType().Assembly;
+        Assembly assembly = GetType().Assembly;
 
         if (!RegisteredConfigurationAssemblies.Contains(assembly))
         {
@@ -37,7 +37,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterControllers(IMvcBuilder builder)
     {
-        Assembly assembly = this.GetType().Assembly;
+        Assembly assembly = GetType().Assembly;
 
         if (!RegisteredControllerAssemblies.Contains(assembly))
         {
@@ -54,7 +54,7 @@ public abstract class Module : IModule
 
     public virtual void RegisterProviders(WebApplication app)
     {
-        Assembly assembly = this.GetType().Assembly;
+        Assembly assembly = GetType().Assembly;
 
         if (!RegisteredProviderAssemblies.Contains(assembly))
         {

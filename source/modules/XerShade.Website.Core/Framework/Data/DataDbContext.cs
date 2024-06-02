@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using XerShade.Website.Core.Components.Options.Models;
 
-namespace XerShade.Website.Core.Data;
+namespace XerShade.Website.Core.Framework.Data;
 
 public class DataDbContext(IConfiguration configuration) : DbContext
 {
@@ -15,7 +15,7 @@ public class DataDbContext(IConfiguration configuration) : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            DbContextConfiguration contextConfiguration = new(this.configuration.GetSection("Data:DbContext"));
+            DbContextConfiguration contextConfiguration = new(configuration.GetSection("Data:DbContext"));
 
             string? connectionString = configuration["Core.Data.DbContext.ConnectionString"] ?? contextConfiguration.GenerateConnectionString();
             string? contextVersion = configuration["Core.Data.DbContext.Version"] ?? contextConfiguration.Version ?? string.Empty;

@@ -1,4 +1,4 @@
-﻿using XerShade.Website.Core.Modules.Interfaces;
+﻿using XerShade.Website.Core.Framework.Modules.Interfaces;
 
 namespace XerShade.Website.Managers.Interfaces;
 

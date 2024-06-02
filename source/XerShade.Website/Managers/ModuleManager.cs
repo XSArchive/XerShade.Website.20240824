@@ -1,5 +1,5 @@
 ﻿using System.Reflection;
-using XerShade.Website.Core.Modules.Interfaces;
+using XerShade.Website.Core.Framework.Modules.Interfaces;
 using XerShade.Website.Managers.Interfaces;
 
 namespace XerShade.Website.Managers;

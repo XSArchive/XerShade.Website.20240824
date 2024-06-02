@@ -1,7 +1,7 @@
-﻿using XerShade.Website.Core.Factories.Population.Interfaces;
-using XerShade.Website.Core.Services.Interfaces;
+﻿using XerShade.Website.Core.Framework.Factories.Population.Interfaces;
+using XerShade.Website.Core.Framework.Services.Interfaces;
 
-namespace XerShade.Website.Core.Services;
+namespace XerShade.Website.Core.Framework.Services;
 
 public class PopulationService(IEnumerable<IPopulationFactory> populationFactories) : IPopulationService
 {
@@ -9,7 +9,7 @@ public class PopulationService(IEnumerable<IPopulationFactory> populationFactori
 
     public virtual void PopulateFactories()
     {
-        foreach (IPopulationFactory factory in this.PopulationFactories)
+        foreach (IPopulationFactory factory in PopulationFactories)
         {
             factory.Populate();
         }
@@ -17,7 +17,7 @@ public class PopulationService(IEnumerable<IPopulationFactory> populationFactori
 
     public virtual async Task PopulateFactoriesAsync()
     {
-        foreach (IPopulationFactory factory in this.PopulationFactories)
+        foreach (IPopulationFactory factory in PopulationFactories)
         {
             await factory.PopulateAsync();
         }

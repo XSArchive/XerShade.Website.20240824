@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace XerShade.Website.Core.Modules.Interfaces;
+namespace XerShade.Website.Core.Framework.Modules.Interfaces;
 
 public interface IModule
 {

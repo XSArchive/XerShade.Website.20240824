@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using XerShade.Website.Core.Components.Options.Services.Interfaces;
-using XerShade.Website.Core.Factories.Population;
+using XerShade.Website.Core.Framework.Factories.Population;
 
 namespace XerShade.Website.Core.Components.Options.Factories;
 
