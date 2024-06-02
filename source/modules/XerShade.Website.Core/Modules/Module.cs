@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using System.Reflection;
@@ -8,6 +9,7 @@ namespace XerShade.Website.Core.Modules;
 
 public abstract class Module : IModule
 {
+    private static readonly HashSet<Assembly> RegisteredConfigurationAssemblies = [];
     private static readonly HashSet<Assembly> RegisteredControllerAssemblies = [];
     private static readonly HashSet<Assembly> RegisteredProviderAssemblies = [];
 
@@ -20,6 +22,18 @@ public abstract class Module : IModule
     public virtual void MigrateDbContexts(IServiceProvider services) { }
 
     public virtual void PopulateDbContexts(IServiceProvider services) { }
+
+    public virtual void RegisterConfiguration(WebApplicationBuilder builder)
+    {
+        Assembly assembly = this.GetType().Assembly;
+
+        if (!RegisteredConfigurationAssemblies.Contains(assembly))
+        {
+            _ = builder.Configuration.AddUserSecrets(assembly);
+
+            _ = RegisteredConfigurationAssemblies.Add(assembly);
+        }
+    }
 
     public virtual void RegisterControllers(IMvcBuilder builder)
     {

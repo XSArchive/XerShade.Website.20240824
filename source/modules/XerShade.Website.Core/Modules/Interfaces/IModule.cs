@@ -10,6 +10,7 @@ public interface IModule
     void ConfigureRouting(WebApplication app);
     void MigrateDbContexts(IServiceProvider services);
     void PopulateDbContexts(IServiceProvider services);
+    void RegisterConfiguration(WebApplicationBuilder builder);
     void RegisterControllers(IMvcBuilder builder);
     void RegisterDbContexts(IServiceCollection services);
     void RegisterIdentity(IServiceCollection services);

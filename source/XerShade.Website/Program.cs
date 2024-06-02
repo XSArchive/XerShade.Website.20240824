@@ -6,6 +6,8 @@ IModuleManager moduleManager = new ModuleManager(Assembly.GetExecutingAssembly()
 IThemeManager themeManager = new ThemeManager(Assembly.GetExecutingAssembly()).Discover() as IThemeManager ?? throw new NullReferenceException();
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
+_ = moduleManager.Execute((module, builder) => module.RegisterConfiguration(builder), builder);
+
 _ = moduleManager.Execute((module, services) => module.RegisterDbContexts(services), builder.Services);
 
 _ = moduleManager.Execute((module, services) => module.RegisterServices(services), builder.Services);
