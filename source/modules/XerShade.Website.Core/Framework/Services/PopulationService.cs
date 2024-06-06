@@ -9,7 +9,7 @@ public class PopulationService(IEnumerable<IPopulationFactory> populationFactori
 
     public virtual void PopulateFactories()
     {
-        foreach (IPopulationFactory factory in PopulationFactories)
+        foreach (IPopulationFactory factory in this.PopulationFactories)
         {
             factory.Populate();
         }
@@ -17,7 +17,7 @@ public class PopulationService(IEnumerable<IPopulationFactory> populationFactori
 
     public virtual async Task PopulateFactoriesAsync()
     {
-        foreach (IPopulationFactory factory in PopulationFactories)
+        foreach (IPopulationFactory factory in this.PopulationFactories)
         {
             await factory.PopulateAsync();
         }

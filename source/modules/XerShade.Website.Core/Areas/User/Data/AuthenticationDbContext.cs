@@ -17,8 +17,8 @@ public class AuthenticationDbContext(IConfiguration configuration) : IdentityDbC
         {
             DbContextConfiguration contextConfiguration = new(this.configuration.GetSection("Authentication:DbContext"));
 
-            string? connectionString = configuration["Core.Authentication.DbContext.ConnectionString"] ?? contextConfiguration.GenerateConnectionString();
-            string? contextVersion = configuration["Core.Authentication.DbContext.Version"] ?? contextConfiguration.Version ?? string.Empty;
+            string? connectionString = this.configuration["Core.Authentication.DbContext.ConnectionString"] ?? contextConfiguration.GenerateConnectionString();
+            string? contextVersion = this.configuration["Core.Authentication.DbContext.Version"] ?? contextConfiguration.Version ?? string.Empty;
 
             _ = optionsBuilder.UseMySql(connectionString, ServerVersion.Create(new Version(contextVersion), ServerType.MariaDb));
         }

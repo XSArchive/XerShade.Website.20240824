@@ -15,10 +15,10 @@ public class DataDbContext(IConfiguration configuration) : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            DbContextConfiguration contextConfiguration = new(configuration.GetSection("Data:DbContext"));
+            DbContextConfiguration contextConfiguration = new(this.configuration.GetSection("Data:DbContext"));
 
-            string? connectionString = configuration["Core.Data.DbContext.ConnectionString"] ?? contextConfiguration.GenerateConnectionString();
-            string? contextVersion = configuration["Core.Data.DbContext.Version"] ?? contextConfiguration.Version ?? string.Empty;
+            string? connectionString = this.configuration["Core.Data.DbContext.ConnectionString"] ?? contextConfiguration.GenerateConnectionString();
+            string? contextVersion = this.configuration["Core.Data.DbContext.Version"] ?? contextConfiguration.Version ?? string.Empty;
 
             _ = optionsBuilder.UseMySql(connectionString, ServerVersion.Create(new Version(contextVersion), ServerType.MariaDb));
         }

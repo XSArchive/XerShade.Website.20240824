@@ -11,68 +11,68 @@ public class DbService<TDataType>(DataDbContext dbContext) : IDisposable, IAsync
     public void Dispose()
     {
         GC.SuppressFinalize(this);
-        dbContext.Dispose();
+        this.dbContext.Dispose();
     }
 
     public ValueTask DisposeAsync()
     {
         GC.SuppressFinalize(this);
-        return dbContext.DisposeAsync();
+        return this.dbContext.DisposeAsync();
     }
 
-    public virtual bool Has(Expression<Func<TDataType, bool>> predicate) => dbContext.Set<TDataType>().Any(predicate);
+    public virtual bool Has(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().Any(predicate);
 
-    public virtual TDataType Read(Expression<Func<TDataType, bool>> predicate) => dbContext.Set<TDataType>().First(predicate);
+    public virtual TDataType Read(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().First(predicate);
 
-    public virtual List<TDataType> ReadRange(Expression<Func<TDataType, bool>> predicate) => dbContext.Set<TDataType>().Where(predicate).ToList();
+    public virtual List<TDataType> ReadRange(Expression<Func<TDataType, bool>> predicate) => this.dbContext.Set<TDataType>().Where(predicate).ToList();
 
-    public virtual IQueryable<TDataType> ReadAll() => dbContext.Set<TDataType>();
+    public virtual IQueryable<TDataType> ReadAll() => this.dbContext.Set<TDataType>();
 
     public virtual void Write(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
-        TDataType entry = dbContext.Set<TDataType>().FirstOrDefault(predicate) ?? CreateNewEntity(writeAction);
+        TDataType entry = this.dbContext.Set<TDataType>().FirstOrDefault(predicate) ?? this.CreateNewEntity(writeAction);
 
         writeAction(entry);
 
-        _ = dbContext.Set<TDataType>().Update(entry);
-        _ = dbContext.SaveChanges();
+        _ = this.dbContext.Set<TDataType>().Update(entry);
+        _ = this.dbContext.SaveChanges();
     }
 
     public virtual void Delete(Expression<Func<TDataType, bool>> predicate)
     {
-        List<TDataType> entries = [.. dbContext.Set<TDataType>().Where(predicate)];
+        List<TDataType> entries = [.. this.dbContext.Set<TDataType>().Where(predicate)];
         if (entries.Count != 0)
         {
-            dbContext.Set<TDataType>().RemoveRange(entries);
-            _ = dbContext.SaveChanges();
+            this.dbContext.Set<TDataType>().RemoveRange(entries);
+            _ = this.dbContext.SaveChanges();
         }
     }
 
-    public virtual async Task<bool> HasAsync(Expression<Func<TDataType, bool>> predicate) => await dbContext.Set<TDataType>().AnyAsync(predicate);
+    public virtual async Task<bool> HasAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().AnyAsync(predicate);
 
-    public virtual async Task<TDataType> ReadAsync(Expression<Func<TDataType, bool>> predicate) => await dbContext.Set<TDataType>().FirstAsync(predicate);
+    public virtual async Task<TDataType> ReadAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().FirstAsync(predicate);
 
-    public virtual async Task<List<TDataType>> ReadRangeAsync(Expression<Func<TDataType, bool>> predicate) => await dbContext.Set<TDataType>().Where(predicate).ToListAsync();
+    public virtual async Task<List<TDataType>> ReadRangeAsync(Expression<Func<TDataType, bool>> predicate) => await this.dbContext.Set<TDataType>().Where(predicate).ToListAsync();
 
-    public virtual async Task<IQueryable<TDataType>> ReadAllAsync() => await Task.Run(dbContext.Set<TDataType>);
+    public virtual async Task<IQueryable<TDataType>> ReadAllAsync() => await Task.Run(this.dbContext.Set<TDataType>);
 
     public virtual async Task WriteAsync(Expression<Func<TDataType, bool>> predicate, Action<TDataType> writeAction)
     {
-        TDataType entry = await dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate) ?? await CreateNewEntityAsync(writeAction);
+        TDataType entry = await this.dbContext.Set<TDataType>().FirstOrDefaultAsync(predicate) ?? await this.CreateNewEntityAsync(writeAction);
 
         writeAction(entry);
 
-        _ = dbContext.Set<TDataType>().Update(entry);
-        _ = await dbContext.SaveChangesAsync();
+        _ = this.dbContext.Set<TDataType>().Update(entry);
+        _ = await this.dbContext.SaveChangesAsync();
     }
 
     public virtual async Task DeleteAsync(Expression<Func<TDataType, bool>> predicate)
     {
-        List<TDataType> entries = await dbContext.Set<TDataType>().Where(predicate).ToListAsync();
+        List<TDataType> entries = await this.dbContext.Set<TDataType>().Where(predicate).ToListAsync();
         if (entries.Count != 0)
         {
-            dbContext.Set<TDataType>().RemoveRange(entries);
-            _ = await dbContext.SaveChangesAsync();
+            this.dbContext.Set<TDataType>().RemoveRange(entries);
+            _ = await this.dbContext.SaveChangesAsync();
         }
     }
 
@@ -82,7 +82,7 @@ public class DbService<TDataType>(DataDbContext dbContext) : IDisposable, IAsync
 
         writeAction(newEntity);
 
-        _ = dbContext.Set<TDataType>().Add(newEntity);
+        _ = this.dbContext.Set<TDataType>().Add(newEntity);
         return newEntity;
     }
 
@@ -92,7 +92,7 @@ public class DbService<TDataType>(DataDbContext dbContext) : IDisposable, IAsync
 
         writeAction(newEntity);
 
-        _ = await dbContext.Set<TDataType>().AddAsync(newEntity);
+        _ = await this.dbContext.Set<TDataType>().AddAsync(newEntity);
         return newEntity;
     }
 }

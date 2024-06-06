@@ -25,11 +25,11 @@ public class OptionsPopulationFactory(IOptionsService service, IConfiguration co
 
     protected void PopulateOption<TValue>(string optionName, TValue optionValue)
     {
-        bool result = service.Has(optionName, checkCache: false);
+        bool result = this.service.Has(optionName, checkCache: false);
 
         if (!result)
         {
-            service.Write(optionName, optionValue, true);
+            this.service.Write(optionName, optionValue, true);
         }
     }
 
@@ -44,11 +44,11 @@ public class OptionsPopulationFactory(IOptionsService service, IConfiguration co
 
     protected async Task PopulateOptionAsync<TValue>(string optionName, TValue optionValue)
     {
-        bool result = await service.HasAsync(optionName, checkCache: false);
+        bool result = await this.service.HasAsync(optionName, checkCache: false);
 
         if (!result)
         {
-            await service.WriteAsync(optionName, optionValue, true);
+            await this.service.WriteAsync(optionName, optionValue, true);
         }
     }
 
