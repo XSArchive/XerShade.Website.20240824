@@ -6,4 +6,5 @@ namespace XerShade.Website.Managers;
 
 public class ThemeManager(Assembly assembly) : Manager<ITheme>(assembly), IThemeManager
 {
+
 }

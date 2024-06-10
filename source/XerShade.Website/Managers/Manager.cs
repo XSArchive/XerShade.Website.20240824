@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using XerShade.Website.Managers.Interfaces;
 
 namespace XerShade.Website.Managers;
@@ -55,11 +56,11 @@ public class Manager<ObjectType>(Assembly assembly) : IManager<ObjectType>
         return this;
     }
 
-    public virtual IManager<ObjectType> Execute(Action<ObjectType, WebApplication> action, WebApplication app)
+    public virtual IManager<ObjectType> Execute<ParameterType>(Action<ObjectType, ParameterType> action, ParameterType parameter)
     {
         foreach (ObjectType obj in this.Objects)
         {
-            action(obj, app);
+            action(obj, parameter);
         }
 
         return this;

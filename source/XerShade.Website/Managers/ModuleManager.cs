@@ -54,44 +54,4 @@ public class ModuleManager(Assembly assembly) : Manager<IModule>(assembly), IMod
 
         throw new NullReferenceException($"Unable to find the required assembly XerShade.Website.Core.");
     }
-
-    public IManager<IModule> Execute(Action<IModule, IServiceCollection> action, IServiceCollection services)
-    {
-        foreach (IModule obj in this.Objects)
-        {
-            action(obj, services);
-        }
-
-        return this;
-    }
-
-    public IManager<IModule> Execute(Action<IModule, IMvcBuilder> action, IMvcBuilder builder)
-    {
-        foreach (IModule obj in this.Objects)
-        {
-            action(obj, builder);
-        }
-
-        return this;
-    }
-
-    public IManager<IModule> Execute(Action<IModule, IServiceProvider> action, IServiceProvider services)
-    {
-        foreach (IModule obj in this.Objects)
-        {
-            action(obj, services);
-        }
-
-        return this;
-    }
-
-    public IManager<IModule> Execute(Action<IModule, WebApplicationBuilder> action, WebApplicationBuilder builder)
-    {
-        foreach (IModule obj in this.Objects)
-        {
-            action(obj, builder);
-        }
-
-        return this;
-    }
 }
