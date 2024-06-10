@@ -19,7 +19,7 @@
                     <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">@Options.Read("Core.Website.Name", "")</a>
                     <div class="small-text">@Options.Read("Core.Website.Description", "")</div>
                 </span>
-                @Html.PartialAsync("_Navigation")
+                @await Html.PartialAsync("_Navigation")
             </div>
         </nav>
     </header>
