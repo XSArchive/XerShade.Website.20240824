@@ -97,9 +97,9 @@ public class CoreModule : Module
 
     public override void RegisterLogging(IServiceCollection services)
     {
-        _ = services.AddSerilog();
-
         base.RegisterLogging(services);
+        
+        _ = services.AddSerilog();
     }
 
     public override void RegisterProviders(WebApplication app)

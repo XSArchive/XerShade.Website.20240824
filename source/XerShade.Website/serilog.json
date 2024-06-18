@@ -5,7 +5,7 @@
     "WriteTo": [
       {
         "Name": "Seq",
-        "Args": { "serverUrl": "http://seq.xershade.ca/" }
+        "Args": { "serverUrl": "https://seq.xershade.ca/" }
       },
       {
         "Name": "Console"
