@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -85,6 +86,23 @@ public abstract class Module : IModule
                     FileProvider = new ManifestEmbeddedFileProvider(assembly)
                 });
             }
+        }
+    }
+
+    public virtual void RegisterRazorPages(WebApplicationBuilder builder)
+    {
+        if (builder.Configuration.GetValue<bool>("EnableRazorRuntimeCompilation"))
+        {
+            Assembly assembly = this.GetType().Assembly;
+
+            if (!HasRegisteredAssembly("RazorPageProviders", assembly))
+            {
+                _ = builder.Services.Configure<MvcRazorRuntimeCompilationOptions>(options =>
+                {
+                    string libraryPath = Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "modules", assembly.GetName().Name ?? throw new NullReferenceException()));
+                    options.FileProviders.Add(new PhysicalFileProvider(libraryPath));
+                });
+            }            
         }
     }
 

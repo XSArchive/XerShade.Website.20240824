@@ -17,5 +17,6 @@ public interface IModule
     void RegisterLogging(IServiceCollection services);
     void RegisterMiddleware(WebApplication app);
     void RegisterProviders(WebApplication app);
+    void RegisterRazorPages(WebApplicationBuilder builder);
     void RegisterServices(IServiceCollection services);
 }

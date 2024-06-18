@@ -27,6 +27,9 @@ try
 
     _ = moduleManager.Execute((module, builder) => module.RegisterControllers(builder), builder.Services.AddControllersWithViews());
 
+    _ = moduleManager.Execute((module, builder) => module.RegisterRazorPages(builder), builder);
+    _ = themeManager.Execute((theme, builder) => theme.RegisterRazorPages(builder), builder);
+
     WebApplication app = builder.Build();
 
     using (IServiceScope scope = app.Services.CreateScope())

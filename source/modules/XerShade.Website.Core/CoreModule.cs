@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
@@ -75,6 +77,8 @@ public class CoreModule : Module
         _ = app.MapControllerRoute(
             name: "default",
             pattern: "{area=Home}/{controller=Home}/{action=Index}/{id?}");
+
+        _ = app.MapRazorPages();
     }
 
     public override void MigrateDbContexts(IServiceProvider services)
@@ -122,6 +126,18 @@ public class CoreModule : Module
         base.RegisterProviders(app);
 
         _ = app.UseStaticFiles(new StaticFileOptions());
+    }
+
+    public override void RegisterRazorPages(WebApplicationBuilder builder)
+    {
+        IMvcBuilder mvcBuilder = builder.Services.AddRazorPages();
+
+        if (builder.Configuration.GetValue<bool>("EnableRazorRuntimeCompilation"))
+        {
+            _ = mvcBuilder.AddRazorRuntimeCompilation();
+        }
+
+        base.RegisterRazorPages(builder);
     }
 
     public override void RegisterServices(IServiceCollection services)
