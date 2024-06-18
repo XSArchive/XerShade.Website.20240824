@@ -94,6 +94,7 @@ public class CoreModule : Module
     }
 
     public override void RegisterIdentity(IServiceCollection services) => _ = services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<AuthenticationDbContext>().AddDefaultTokenProviders();
+
     public override void RegisterLogging(IServiceCollection services)
     {
         _ = services.AddSerilog();

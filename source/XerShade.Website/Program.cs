@@ -32,7 +32,7 @@ try
     using (IServiceScope scope = app.Services.CreateScope())
     {
         IServiceProvider services = scope.ServiceProvider;
-
+        
         _ = moduleManager.Execute((module, services) => module.MigrateDbContexts(services), services);
         _ = moduleManager.Execute((module, services) => module.PopulateDbContexts(services), services);
 

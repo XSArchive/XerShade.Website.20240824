@@ -1,6 +1,6 @@
 {
   "Serilog": {
-    "Using": [ "Serilog.Sinks.Seq" ],
+    "Using": [ "Serilog.Sinks.Seq", "Serilog.Sinks.File", "Serilog.Enrichers.Environment", "Serilog.Enrichers.Thread" ],
     "MinimumLevel": "Information",
     "WriteTo": [
       {
@@ -9,9 +9,16 @@
       },
       {
         "Name": "Console"
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "logs/log-.txt",
+          "rollingInterval": "Day"
+        }
       }
     ],
-    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId", "WithEnvironmentUserName", "WithEnvironmentName" ],
     "Properties": {
       "Application": "XerShade.Website"
     }
