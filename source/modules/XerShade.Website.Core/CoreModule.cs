@@ -25,6 +25,8 @@ public class CoreModule : Module
 {
     public override void ConfigureEnvironment(WebApplication app)
     {
+        base.ConfigureEnvironment(app);
+
         if (!app.Environment.IsDevelopment())
         {
             _ = app.UseExceptionHandler("/Home/Error");
@@ -42,6 +44,8 @@ public class CoreModule : Module
 
     public override void ConfigureIdentity(IServiceProvider services)
     {
+        base.ConfigureIdentity(services);
+
         IOptionsService? optionsService = services.GetService<IOptionsService>();
         IdentityOptions? identityOptions = services.GetService<IOptions<IdentityOptions>>()?.Value;
 
@@ -57,6 +61,8 @@ public class CoreModule : Module
 
     public override void ConfigureRouting(WebApplication app)
     {
+        base.ConfigureRouting(app);
+
         _ = app.UseRouting();
 
         _ = app.UseAuthentication();
@@ -73,27 +79,36 @@ public class CoreModule : Module
 
     public override void MigrateDbContexts(IServiceProvider services)
     {
+        base.MigrateDbContexts(services);
+
         services.GetRequiredService<DataDbContext>().Database.Migrate();
         services.GetRequiredService<AuthenticationDbContext>().Database.Migrate();
     }
 
     public override void PopulateDbContexts(IServiceProvider services)
     {
+        base.PopulateDbContexts(services);
+
         IPopulationService? populationService = services.GetService<IPopulationService>();
 
         populationService?.PopulateFactories();
         _ = Task.Run(async () => await (populationService?.PopulateFactoriesAsync() ?? throw new NullReferenceException()));
-
-        base.PopulateDbContexts(services);
     }
 
     public override void RegisterDbContexts(IServiceCollection services)
     {
+        base.RegisterDbContexts(services);
+
         _ = services.AddDbContextFactory<DataDbContext>();
         _ = services.AddDbContext<AuthenticationDbContext>();
     }
 
-    public override void RegisterIdentity(IServiceCollection services) => _ = services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<AuthenticationDbContext>().AddDefaultTokenProviders();
+    public override void RegisterIdentity(IServiceCollection services)
+    {
+        base.RegisterIdentity(services);
+
+        _ = services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<AuthenticationDbContext>().AddDefaultTokenProviders();
+    }
 
     public override void RegisterLogging(IServiceCollection services)
     {
@@ -104,13 +119,15 @@ public class CoreModule : Module
 
     public override void RegisterProviders(WebApplication app)
     {
-        _ = app.UseStaticFiles(new StaticFileOptions());
-
         base.RegisterProviders(app);
+
+        _ = app.UseStaticFiles(new StaticFileOptions());
     }
 
     public override void RegisterServices(IServiceCollection services)
     {
+        base.RegisterServices(services);
+
         _ = services.AddTransient<IPopulationService, PopulationService>();
         _ = services.AddTransient<IPopulationFactory, OptionsPopulationFactory>();
         _ = services.AddSingleton<IOptionsService, OptionsService>();
