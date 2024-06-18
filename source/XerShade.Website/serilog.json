@@ -1,0 +1,19 @@
+{
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Seq" ],
+    "MinimumLevel": "Information",
+    "WriteTo": [
+      {
+        "Name": "Seq",
+        "Args": { "serverUrl": "http://seq.xershade.ca/" }
+      },
+      {
+        "Name": "Console"
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "XerShade.Website"
+    }
+  }
+}

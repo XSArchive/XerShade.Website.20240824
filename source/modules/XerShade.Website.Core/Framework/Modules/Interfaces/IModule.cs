@@ -14,6 +14,7 @@ public interface IModule
     void RegisterControllers(IMvcBuilder builder);
     void RegisterDbContexts(IServiceCollection services);
     void RegisterIdentity(IServiceCollection services);
+    void RegisterLogging(IServiceCollection services);
     void RegisterMiddleware(WebApplication app);
     void RegisterProviders(WebApplication app);
     void RegisterServices(IServiceCollection services);

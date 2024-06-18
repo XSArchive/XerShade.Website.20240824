@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
+using Serilog;
 using XerShade.Website.Core.Areas.User.Data;
 using XerShade.Website.Core.Areas.User.Data.Models;
 using XerShade.Website.Core.Components.Options.Factories;
@@ -93,6 +94,12 @@ public class CoreModule : Module
     }
 
     public override void RegisterIdentity(IServiceCollection services) => _ = services.AddIdentity<ApplicationUser, ApplicationRole>().AddEntityFrameworkStores<AuthenticationDbContext>().AddDefaultTokenProviders();
+    public override void RegisterLogging(IServiceCollection services)
+    {
+        _ = services.AddSerilog();
+
+        base.RegisterLogging(services);
+    }
 
     public override void RegisterProviders(WebApplication app)
     {

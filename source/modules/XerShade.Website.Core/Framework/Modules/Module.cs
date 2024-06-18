@@ -68,6 +68,8 @@ public abstract class Module : IModule
 
     public virtual void RegisterIdentity(IServiceCollection services) { }
 
+    public virtual void RegisterLogging(IServiceCollection services) { }
+
     public virtual void RegisterMiddleware(WebApplication app) { }
 
     public virtual void RegisterProviders(WebApplication app)

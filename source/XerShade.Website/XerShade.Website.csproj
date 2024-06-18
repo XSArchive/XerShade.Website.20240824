@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.19.5" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
+    <PackageReference Include="Serilog.Sinks.Seq" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,8 +22,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="serilog.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\modules\XerShade.Website.Core\XerShade.Website.Core.csproj" />
     <ProjectReference Include="..\themes\XerShade.Website.Theming\XerShade.Website.Theming.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="serilog.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
